@@ -8,14 +8,11 @@
 #include <QCryptographicHash>
 #include <QFile>
 
-class AutoUpdater {
-public:
-    void checkForUpdates();
-    void downloadUpdate(const QString &moduleName);
-};
-
 AutoUpdater::AutoUpdater(const QString &updateUrl, QObject *parent)
-    : QObject(parent), url(updateUrl) {}
+    : QObject(parent), url(updateUrl) 
+{
+    manager = new QNetworkAccessManager(this);
+}
 
 void AutoUpdater::checkForUpdates() {
     qDebug() << "AutoUpdater placeholder: checks for updates (not implemented yet).";

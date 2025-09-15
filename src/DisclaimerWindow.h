@@ -1,7 +1,6 @@
 #ifndef DISCLAIMERWINDOW_H
 #define DISCLAIMERWINDOW_H
 
-#pragma once
 #include <QDialog>
 #include <QPushButton>
 #include <QLabel>
@@ -14,6 +13,11 @@ class DisclaimerWindow : public QDialog
 public:
     DisclaimerWindow(QWidget* parent = nullptr);
     bool isAcknowledged() const;
+    
+private slots:
+    void onAgreeChanged(int state);
+    void onProceedClicked();
+    
 private:
     QCheckBox* acknowledgeCheck;
     QPushButton* acceptButton;
@@ -21,8 +25,5 @@ private:
     QPushButton* proceedBtn;
     bool acknowledged = false;
 };
-private slots:
-    void onAgreeChanged(int state);
-    void onProceedClicked();
-};
+
 #endif // DISCLAIMERWINDOW_H

@@ -1,43 +1,57 @@
 #include "PluginManager.h"
-#include <QDir>
 #include <QPluginLoader>
+#include <QDir>
 #include <QDebug>
 
-void PluginManager::loadPlugin(const QString &path) {
-    QPluginLoader loader(path);
+PluginManager::PluginManager(QObject *parent) : QObject(parent)
+{
+}
+
+void PluginManager::loadPlugin(const QString &filePath)
+{
+    QPluginLoader loader(filePath);
     QObject *plugin = loader.instance();
-    if(plugin) {
-        IPlugin *iplugin = qobject_cast<IPlugin*>(plugin);
-        if(iplugin) {
-            loadedPlugins.append(plugin);
-            emit pluginLoaded(iplugin->name());
-            iplugin->initialize();
-        }
-    } else {
-        qDebug() << "Failed to load plugin:" << loader.errorString();
+    if (plugin) {
+        // Store the plugin without trying to cast to IPlugin (which doesn't exist)
+        plugins[filePath] = plugin;
+        emit pluginLoaded(filePath);
     }
 }
 
-QStringList PluginManager::availablePlugins() const {
-    QStringList plugins;
-    QDir dir("Plugins");
-    for(const QString &file : dir.entryList(QDir::Files)) {
-        plugins.append(file);
-    }
-    return plugins;
+QStringList PluginManager::availablePlugins() const
+{
+    return plugins.keys();
 }
-void PluginManager::unloadPlugin(const QString &name) {
-    for(int i = 0; i < loadedPlugins.size(); ++i) {
-        IPlugin *iplugin = qobject_cast<IPlugin*>(loadedPlugins[i]);
-        if(iplugin && iplugin->name() == name) {
-            QPluginLoader loader(loadedPlugins[i]->metaObject()->className());
-            if(loader.unload()) {
-                emit pluginUnloaded(name);
-                loadedPlugins.removeAt(i);
-            } else {
-                qDebug() << "Failed to unload plugin:" << loader.errorString();
-            }
-            return;
-        }
+
+void PluginManager::unloadPlugin(const QString &name)
+{
+    if (plugins.contains(name)) {
+        plugins.remove(name);
+        emit pluginUnloaded(name);
     }
+}
+
+void PluginManager::discoverPlugins()
+{
+    // Scan for plugins in common directories
+    QDir pluginDir("plugins");
+    if (pluginDir.exists()) {
+        // Implementation for discovering plugins
+    }
+}
+
+void PluginManager::registerPluginTab(QWidget *tab, const QString &name)
+{
+    // Implementation for registering plugin tabs
+}
+
+void PluginManager::unregisterPluginTab(const QString &name)
+{
+    // Implementation for unregistering plugin tabs
+}
+
+QTabWidget* PluginManager::getPluginTabWidget()
+{
+    // Return the main tab widget where plugins should be added
+    return nullptr; // placeholder
 }

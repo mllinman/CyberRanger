@@ -1,10 +1,10 @@
 #pragma once
 #include <QWidget>
-#include <QTableView>
+#include <QTableWidget>
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QThread>
-#include <vector>
+#include <QTableWidgetItem>
 
 struct ScanResult {
     QString ip;
@@ -19,15 +19,14 @@ public:
     NetworkScanTab(QWidget *parent = nullptr);
 
 private:
-    QTableView *scanResults;
+    QTableWidget *scanResults;
     QPushButton *startScan;
     QPushButton *exportCSV;
     QVBoxLayout *layout;
 
     void setupUI();
-    void runScanAsync();
 
 private slots:
-    void scanFinished(const std::vector<ScanResult> &results);
+    void runScan();
     void exportResults();
 };

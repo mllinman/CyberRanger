@@ -1,19 +1,21 @@
-cmake_minimum_required(VERSION 1.0.0)
-project(ModernPentestSuite LANGUAGES CXX)
+cmake_minimum_required(VERSION 3.16.0)
+project(CyberRanger LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Qt6 COMPONENTS Core Widgets Gui Network Charts REQUIRED)
 
-include_directories(include)
+include_directories(src)
+include_directories(src/utils)
+include_directories(Core)
+include_directories(modules)
 
-file(GLOB SOURCES "src/*.cpp")
-file(GLOB HEADERS "include/*.h")
+file(GLOB SOURCES "src/*.cpp" "src/utils/*.cpp" "Core/*.cpp" "modules/*.cpp")
+file(GLOB HEADERS "src/*.h" "src/utils/*.h" "Core/*.h" "modules/*.h")
 
 qt_standard_project_setup()
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})

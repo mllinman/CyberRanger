@@ -3,7 +3,7 @@
 #include <QtCharts/QLineSeries>
 #include <QtCharts/QValueAxis>
 #include <QMap>
-#include "WiFiScanner.h"
+#include "../modules/WifiScanner.h"
 
 using namespace QtCharts;
 

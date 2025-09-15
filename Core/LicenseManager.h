@@ -11,12 +11,11 @@ public:
     explicit LicenseManager(QObject *parent = nullptr);
 
     bool acknowledgeDisclaimer(QWidget *parent);
-
-};
-
-#endif // LICENSEMANAGER_H
     bool isAcknowledged() const;
+
 private:
     bool acknowledged;
     void showDisclaimerDialog(QWidget *parent);
 };
+
+#endif // LICENSEMANAGER_H

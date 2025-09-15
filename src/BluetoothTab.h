@@ -7,13 +7,7 @@
 #include <QTimer>
 #include <QRandomGenerator>
 #include <vector>
-#include <string>
-
-struct BluetoothDevice {
-    std::wstring name;
-    std::wstring address;
-    bool paired;
-};
+#include "../modules/BluetoothScanner.h"
 
 class BluetoothTab : public QWidget {
     Q_OBJECT

@@ -19,13 +19,15 @@ public:
     ThreatIntelManager(QObject *parent = nullptr);
     QVector<Threat> getCurrentThreats() const;
     void fetchIndicators();
+    
 signals:
     void threatsUpdated(const QVector<Threat> &threats);
     void indicatorsUpdated(const QStringList &iocList);
-};
+    
+private slots:
+    void generateThreats();
+    
 private:
     QVector<Threat> threats;
     QTimer *updateTimer;
-private slots:
-    void generateThreats();
 };
