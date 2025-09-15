@@ -1,0 +1,37 @@
+cmake_minimum_required(VERSION 3.16.0)
+project(CyberRangerMinimal LANGUAGES CXX)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
+
+find_package(Qt6 COMPONENTS Core Widgets Gui REQUIRED)
+
+include_directories(src)
+include_directories(Core)
+include_directories(modules)
+
+# Only include essential files for initial build
+set(CORE_SOURCES
+    src/Main.cpp
+    src/MainWindow.cpp
+    src/DisclaimerWindow.cpp
+    Core/LicenseManager.cpp
+    modules/Logger.cpp
+)
+
+set(CORE_HEADERS
+    src/MainWindow.h
+    src/DisclaimerWindow.h
+    Core/LicenseManager.h
+    modules/Logger.h
+)
+
+file(GLOB RESOURCES "*.qrc")
+
+qt_standard_project_setup()
+add_executable(${PROJECT_NAME} ${CORE_SOURCES} ${CORE_HEADERS} ${RESOURCES})
+
+target_link_libraries(${PROJECT_NAME} Qt6::Core Qt6::Widgets Qt6::Gui)

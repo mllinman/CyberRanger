@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <QString>
+#include <QObject>
 
 struct Packet {
     QString srcIP;
@@ -8,14 +9,13 @@ struct Packet {
     int size;
 };
 
-class PacketSniffer {
+class PacketSniffer : public QObject {
+    Q_OBJECT
 public:
-    PacketSniffer();
-    std::vector<Packet> capture(int maxPackets);
-};
+    explicit PacketSniffer(QObject *parent = nullptr);
+    QStringList scanPackets();
+
 private:
     std::vector<Packet> packets;
     void parsePacketData(const QByteArray& rawData);
 };
-    // Platform-specific implementation
-    // For Windows, we might use WinPcap or Npcap

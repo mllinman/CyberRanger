@@ -1,7 +1,8 @@
 #pragma once
 #include <vector>
 #include <QString>
-#include <QHostAddress>
+#include <QStringList>
+#include <QObject>
 
 struct PortInfo {
     quint16 port;
@@ -9,18 +10,12 @@ struct PortInfo {
     bool open;
 };
 
-struct PortResult {
-    int port;
-    bool open;
-};
-
-class PortScanner {
+class PortScanner : public QObject {
+    Q_OBJECT
 public:
-    PortScanner();
-    std::vector<PortResult> scan(const QString& ip, int startPort, int endPort);
-};
+    explicit PortScanner(QObject *parent = nullptr);
+    QStringList scanPorts(const QString &targetIP, int startPort, int endPort);
+
 private:
-    bool isPortOpen(const QHostAddress& host, quint16 port);
+    bool isPortOpen(const QString &host, quint16 port);
 };
-    // Platform-specific implementation
-    // For Windows, we might use Winsock
