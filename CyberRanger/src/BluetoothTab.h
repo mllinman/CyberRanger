@@ -5,6 +5,7 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QTimer>
+#include <QRandomGenerator>
 #include <vector>
 #include <string>
 
@@ -28,6 +29,8 @@ private slots:
     void unpairDevice();  
 
 private:
+    QListWidget *btDevices;
+    QTimer *updateTimer;
     QVBoxLayout *layout;
     QTableWidget *deviceTable;
     QPushButton *startScan;

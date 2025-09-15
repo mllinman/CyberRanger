@@ -3,6 +3,7 @@
 #include <QObject>
 #include <QString>
 #include <QMap>
+#include <QTabWidget>
 
 class PluginManager : public QObject {
     Q_OBJECT
@@ -19,4 +20,6 @@ private:
     QMap<QString, QObject*> plugins;
     QStringList pluginPaths;
     void discoverPlugins();
-};
+    void registerPluginTab(QWidget *tab, const QString &name);
+    void unregisterPluginTab(const QString &name);
+    QTabWidget* getPluginTabWidget();

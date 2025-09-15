@@ -1,15 +1,22 @@
+#include "DisclaimerWindow.h"
 #include <QApplication>
 #include <QSplashScreen>
 #include <QTimer>
 #include "MainWindow.h"
+#include <QFile>
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) 
+{
     QApplication a(argc, argv);
 
-    // Apply dark theme
-    QFile file(":/resources/darktheme.qss");
+    DisclaimerWindow disclaimer;
+    if(disclaimer.exec() != QDialog::Accepted || !disclaimer.isAcknowledged()) {
+        return 0; // Exit if not acknowledged
+    }
+    // Apply dark mode
+    QFile file(":/resources/darkmode.qss");
     if (file.open(QFile::ReadOnly | QFile::Text)) {
-        QString style = QTextStream(&file).readAll();
+        QString style = QLatin1String(file.readAll());
         a.setStyleSheet(style);
     }
     QPixmap pixmap(":/assets/splash.png");
@@ -21,5 +28,8 @@ int main(int argc, char *argv[]) {
 
     MainWindow w;
     w.showMaximized(); // Fullscreen on start
+    splash.finish(&w);
+    w.show();
+    
     return a.exec();
 }

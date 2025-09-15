@@ -1,0 +1,8 @@
+void logEvent(const QString &module, const QString &message, int severity) {
+    QSqlQuery query;
+    query.prepare("INSERT INTO logs(module, message, severity, timestamp) VALUES (?, ?, ?, datetime('now'))");
+    query.addBindValue(module);
+    query.addBindValue(message);
+    query.addBindValue(severity);
+    query.exec();
+}

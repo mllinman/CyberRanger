@@ -2,6 +2,9 @@
 #include <QWidget>
 #include <QVBoxLayout>
 #include <QLabel>
+#include <QtCharts>
+#include <QMap>
+#include <QString>
 #include <QtCharts/QChartView>
 #include <QtCharts/QPieSeries>
 #include <QTimer>
@@ -9,6 +12,11 @@
 #include "Core/ThreatIntelManager.h"
 
 QT_CHARTS_USE_NAMESPACE
+
+struct Metric {
+    QLineSeries *series;
+    QString name;
+};
 
 using namespace QtCharts;
 
@@ -26,10 +34,13 @@ private:
     QVBoxLayout *layout;
     QLabel *summaryLabel;
     QChartView *chartView;
+    QChart *chart;
+    QMap<QString, Metric> metrics;
     QLineSeries *series;
     QTimer *timer;
     int xValue;
 private slots:
+    void updateMetrics();
     void updateChart();
     void setupUI();
     void populateDummyData();

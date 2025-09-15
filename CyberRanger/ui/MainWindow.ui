@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="windowTitle">
+   <string>CyberRanger</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QTabWidget" name="tabWidget">
+      <widget class="QWidget" name="tabWiFi">
+       <attribute name="title">
+        <string>Wi-Fi</string>
+       </attribute>
+       <layout class="QVBoxLayout">
+        <item>
+         <widget class="QPushButton" name="btnScanWiFi">
+          <property name="text">
+           <string>Start Wi-Fi Scan</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTableWidget" name="tableWiFi">
+          <column>
+           <property name="text">
+            <string>SSID</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>BSSID</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Channel</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Signal</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Encryption</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Hidden</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+
+      <widget class="QWidget" name="tabBluetooth">
+       <attribute name="title">
+        <string>Bluetooth</string>
+       </attribute>
+       <layout class="QVBoxLayout">
+        <item>
+         <widget class="QPushButton" name="btnScanBT">
+          <property name="text">
+           <string>Start Bluetooth Scan</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTableWidget" name="tableBT">
+          <column>
+           <property name="text">
+            <string>Name</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Address</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Class</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>RSSI</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Paired</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+
+      <widget class="QWidget" name="tabNetworkMap">
+       <attribute name="title">
+        <string>Network Map</string>
+       </attribute>
+       <layout class="QVBoxLayout">
+        <item>
+         <widget class="QPushButton" name="btnScanNetwork">
+          <property name="text">
+           <string>Scan Network</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTableWidget" name="tableNetwork">
+          <column>
+           <property name="text">
+            <string>IP</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>MAC</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Host</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>OS</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+
+      <widget class="QWidget" name="tabReports">
+       <attribute name="title">
+        <string>Reports</string>
+       </attribute>
+       <layout class="QVBoxLayout">
+        <item>
+         <widget class="QPushButton" name="btnGenerateReport">
+          <property name="text">
+           <string>Generate Report</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+</ui>
+    <resources/>
+    <connections/>

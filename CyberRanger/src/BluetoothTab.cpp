@@ -1,5 +1,7 @@
 #include "BluetoothTab.h"
+#include <QVBoxLayout>
 #include <windows.h>
+#include <QProcess>
 #include "NetworkUtils.h"
 #include <QFileDialog>
 #include <QTextStream>
@@ -11,11 +13,20 @@
 #pragma comment(lib, "Bthprops.lib")
 
 BluetoothTab::BluetoothTab(QWidget *parent) : QWidget(parent) {
+    btDevices = new QListWidget(this);
     setupUI();
 
     autoScanTimer = new QTimer(this);
     connect(autoScanTimer, &QTimer::timeout, this, &BluetoothTab::scanDevices);
     autoScanTimer->start(15000); // Scan every 15 seconds
+
+    QVBoxLayout *layout = new QVBoxLayout(this);
+    layout->addWidget(btDevices);
+    setLayout(layout);
+
+    updateTimer = new QTimer(this);
+    connect(updateTimer, &QTimer::timeout, this, &BluetoothTab::scanDevices);
+    updateTimer->start(3000); // scan every 3 seconds
 }
 
 void BluetoothTab::setupUI() {
@@ -68,10 +79,37 @@ std::vector<BluetoothDevice> BluetoothTab::getAvailableDevices() {
 void BluetoothTab::scanDevices() {
     std::vector<BluetoothDevice> devices = getAvailableDevices();
     deviceTable->setRowCount((int)devices.size());
-
     for (int i = 0; i < (int)devices.size(); i++) {
         deviceTable->setItem(i, 0, new QTableWidgetItem(QString::fromStdWString(devices[i].name)));
         deviceTable->setItem(i, 1, new QTableWidgetItem(QString::fromStdWString(devices[i].address)));
         deviceTable->setItem(i, 2, new QTableWidgetItem(devices[i].paired ? "Yes" : "No"));
+    }
+    void BluetoothTab::scanDevices() {
+    QProcess process;
+    process.start("powershell -Command \"Get-PnpDevice -Class Bluetooth | Select-Object Name,Status\"");
+    process.waitForFinished();
+    QString output = process.readAllStandardOutput();
+
+    // Parse output and populate QTableWidget
+    QStringList lines = output.split('\n');
+    for (const QString& line : lines) {
+        if (line.contains("Name") && line.contains("Status")) {
+            continue; // Skip header
+        }
+        QStringList columns = line.split(QRegularExpression("\\s+"), QString::SkipEmptyParts);
+        if (columns.size() >= 2) {
+            QString name = columns[0];
+            QString status = columns[1];
+            // Add to table
+            int row = deviceTable->rowCount();
+            deviceTable->insertRow(row);
+            deviceTable->setItem(row, 0, new QTableWidgetItem(name));
+            deviceTable->setItem(row, 1, new QTableWidgetItem(status));
+        }
+    }
+    btDevices->clear();
+    int devices = QRandomGenerator::global()->bounded(2, 6);
+    for(int i = 0; i < devices; ++i){
+        btDevices->addItem(QString("BT_Device_%1").arg(i+1));
     }
 }

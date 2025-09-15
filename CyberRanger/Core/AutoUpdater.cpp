@@ -1,5 +1,6 @@
 // Core/AutoUpdater.cpp
 #include "AutoUpdater.h"
+#include <QDebug>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QJsonDocument>
@@ -7,10 +8,17 @@
 #include <QCryptographicHash>
 #include <QFile>
 
+class AutoUpdater {
+public:
+    void checkForUpdates();
+    void downloadUpdate(const QString &moduleName);
+};
+
 AutoUpdater::AutoUpdater(const QString &updateUrl, QObject *parent)
     : QObject(parent), url(updateUrl) {}
 
 void AutoUpdater::checkForUpdates() {
+    qDebug() << "AutoUpdater placeholder: checks for updates (not implemented yet).";
     QNetworkAccessManager *manager = new QNetworkAccessManager(this);
     QNetworkReply *reply = manager->get(QNetworkRequest(QUrl(url)));
     connect(reply, &QNetworkReply::finished, [this, reply]() {
