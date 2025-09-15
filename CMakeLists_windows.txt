@@ -1,0 +1,77 @@
+# Windows-specific CMake configuration for CyberRanger
+cmake_minimum_required(VERSION 3.16.0)
+project(CyberRanger LANGUAGES CXX)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
+
+# Windows-specific settings
+if(WIN32)
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
+    set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} /MT")
+    
+    # Set Windows subsystem for GUI application
+    set_property(TARGET ${PROJECT_NAME} PROPERTY WIN32_EXECUTABLE TRUE)
+endif()
+
+# Find Qt6 components
+find_package(Qt6 REQUIRED COMPONENTS Core Widgets)
+
+# Include all source files
+file(GLOB_RECURSE SOURCES 
+    "src/*.cpp"
+    "src/*.h"
+)
+
+# Resource files
+file(GLOB RESOURCES "*.qrc")
+
+# Main executable source
+set(MAIN_SOURCE "simple_main.cpp")
+
+# Create executable
+if(WIN32)
+    add_executable(${PROJECT_NAME} WIN32 ${MAIN_SOURCE} ${SOURCES} ${RESOURCES})
+else()
+    add_executable(${PROJECT_NAME} ${MAIN_SOURCE} ${SOURCES} ${RESOURCES})
+endif()
+
+# Link Qt libraries
+target_link_libraries(${PROJECT_NAME} 
+    Qt6::Core 
+    Qt6::Widgets
+)
+
+# Windows-specific linking
+if(WIN32)
+    target_link_libraries(${PROJECT_NAME}
+        ws2_32
+        iphlpapi
+        wininet
+    )
+endif()
+
+# Set output directory
+set_target_properties(${PROJECT_NAME} PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_BINARY_DIR}/Release"
+    RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_BINARY_DIR}/Debug"
+)
+
+# Install rules for packaging
+install(TARGETS ${PROJECT_NAME} 
+    RUNTIME DESTINATION bin
+)
+
+# Install Qt DLLs on Windows (when using windeployqt)
+if(WIN32)
+    find_program(WINDEPLOYQT_EXECUTABLE windeployqt HINTS ${Qt6_DIR}/../../../bin)
+    if(WINDEPLOYQT_EXECUTABLE)
+        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+            COMMAND ${WINDEPLOYQT_EXECUTABLE} $<TARGET_FILE:${PROJECT_NAME}>
+            COMMENT "Deploying Qt libraries"
+        )
+    endif()
+endif()

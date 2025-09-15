@@ -1,0 +1,105 @@
+QWidget {
+    background-color: #1e1e1e1e;
+    color: #f0f0f0f0;
+    font-family: "Segoe UI", sans-serif;
+    font-size: 11pt;
+}
+
+QPushButton {
+    background-color: #2d2d30;
+    border: 1px solid #3e3e42;
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+
+QPushButton:hover {
+    background-color: #3e3e42;
+}
+
+QTableView, QListWidget {
+    background-color: #1e1e1e;
+    border: 1px solid #3a3a3a;
+}
+QTableWidget {
+    background-color: #252526;
+    gridline-color: #3e3e42;
+}
+QTabWidget::pane {
+    border: 1px solid #3a3a3a;
+}
+QHeaderView::section {
+    background-color: #2d2d30;
+    padding: 4px;
+    border: 1px solid #3e3e42;
+}
+QLineEdit, QTextEdit {
+    background-color: #1e1e1e;
+    border: 1px solid #3a3a3a;
+    color: #e0e0e0;
+}
+QScrollBar:vertical {
+    background: #2d2d30;
+    width: 12px;
+    margin: 0px 0px 0px 0px;
+    border: 1px solid #3a3a3a;
+    border-radius: 4px;
+}
+QScrollBar::handle:vertical {
+    background: #555555;
+    min-height: 20px;
+    border-radius: 4px;
+}
+QScrollBar::handle:vertical:hover {
+    background: #777777;
+}
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+QTabBar::tab {
+    background: #1f1f1f;
+    border: 1px solid #3a3a3a;
+    padding: 8px;
+    border-bottom: none;
+}
+QTabBar::tab:selected {
+    background: #4b4b6a;
+    border-bottom: 1px solid #ffffff;
+}
+QTabBar::tab:hover {
+    background: #333333;
+}
+QMenuBar {
+    background-color: #1f1f1f;
+    color: #e0e0e0;
+}
+QMenuBar::item:selected {
+    background-color: #333333;
+}
+QMenu {
+    background-color: #1f1f1f;
+    color: #e0e0e0;
+    border: 1px solid #3a3a3a;
+}
+QMenu::item:selected {
+    background-color: #333333;
+}
+QCheckBox {
+    spacing: 5px;
+}
+QCheckBox::indicator {
+    width: 15px;
+    height: 15px;
+}
+QCheckBox::indicator:checked {
+    background-color: #0078d7;
+    border: 1px solid #3a3a3a;
+}
+QCheckBox::indicator:unchecked {
+    background-color: #1e1e1e;
+    border: 1px solid #3a3a3a;
+}
+QComboBox {
+    background-color: #1e1e1e;
+    border: 1px solid #3a3a3a;
+    color: #e0e0e0;
+}
