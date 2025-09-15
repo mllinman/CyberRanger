@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QVector>
 #include <QString>
+#include <QTimer>
 
 struct NetworkDevice {
     QString ip;
@@ -26,11 +27,6 @@ signals:
     void scanCompleted();
 
 private:
-    QVector<NetworkDevice> devices;
-    void performScan();
-};
-
-#endif // NETWORKMAPPER_H
     QVector<NetworkDevice> devices;
     void performScan();
 };

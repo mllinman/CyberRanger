@@ -8,8 +8,8 @@
 #include <QtCharts/QChartView>
 #include <QtCharts/QPieSeries>
 #include <QTimer>
-#include "Core/NetworkAnalyzer.h"
-#include "Core/ThreatIntelManager.h"
+#include "../Core/NetworkAnalyzer.h"
+#include "ThreatIntelManager.h"
 
 QT_CHARTS_USE_NAMESPACE
 

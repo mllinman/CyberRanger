@@ -4,22 +4,6 @@
 
 NetworkMapper::NetworkMapper(QObject *parent) : QObject(parent) {}
 
-class NetworkMapper: public QObject, public ICyberModule
-{
-    Q_OBJECT
-    Q_PLUGIN_METADATA(IID ICyberModule_iid)
-    Q_INTERFACES(ICyberModule)
-
-public:
-    QString moduleName() const override { return "Network Mapper"; }
-    QWidget* createWidget(QWidget* parent = nullptr) override;
-    void startScan() override;
-    void stopScan() override;
-private:
-    bool scanning = false;
-    QTimer* scanTimer;
-};
-
 void NetworkMapper::scanNetwork() {
     devices.clear();
     performScan();
