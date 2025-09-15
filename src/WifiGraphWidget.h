@@ -1,25 +1,17 @@
 #pragma once
-#include <QtCharts/QChartView>
-#include <QtCharts/QLineSeries>
-#include <QtCharts/QValueAxis>
-#include <QMap>
-#include "../modules/WifiScanner.h"
+#include <QWidget>
+#include <QLabel>
+#include <QVBoxLayout>
 
-using namespace QtCharts;
-
-class WiFiGraphWidget : public QChartView {
+// Simplified version for initial build without QtCharts dependency
+class WiFiGraphWidget : public QWidget {
     Q_OBJECT
 public:
     explicit WiFiGraphWidget(QWidget *parent = nullptr);
-    void addNetwork(const WiFiNetwork &network);
-    void updateSignal(const WiFiNetwork &network);
+    void addNetwork(const QString &ssid);
+    void updateSignal(const QString &ssid);
 
 private:
-    QChart *chart;
-    QValueAxis *axisX;
-    QValueAxis *axisY;
-    QMap<QString, QLineSeries*> networkSeries;
-    int timeIndex = 0;
+    QLabel *infoLabel;
+    QVBoxLayout *layout;
 };
-    WiFiScanner *scanner;
-    QTimer *updateTimer;

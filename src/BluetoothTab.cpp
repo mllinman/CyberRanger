@@ -1,13 +1,11 @@
 #include "BluetoothTab.h"
 #include <QVBoxLayout>
-#include <windows.h>
 #include <QProcess>
 #include "NetworkUtils.h"
 #include <QFileDialog>
 #include <QTextStream>
 #include <QMessageBox>
-#include <windows.h>
-#include <bluetoothapis.h>
+#include <QDebug>
 #include <QStringList>
 
 #pragma comment(lib, "Bthprops.lib")
@@ -45,34 +43,22 @@ void BluetoothTab::setupUI() {
 }
 std::vector<BluetoothDevice> BluetoothTab::getAvailableDevices() {
     std::vector<BluetoothDevice> devices;
-
-    BLUETOOTH_DEVICE_SEARCH_PARAMS searchParams = { sizeof(BLUETOOTH_DEVICE_SEARCH_PARAMS) };
-    searchParams.fReturnAuthenticated = TRUE;
-    searchParams.fReturnRemembered = TRUE;
-    searchParams.fReturnUnknown = TRUE;
-    searchParams.fReturnConnected = TRUE;
-    searchParams.hRadio = nullptr;
-    searchParams.cTimeoutMultiplier = 2;
-
-    BLUETOOTH_DEVICE_INFO deviceInfo = { sizeof(BLUETOOTH_DEVICE_INFO) };
-    HBLUETOOTH_DEVICE_FIND hFind = BluetoothFindFirstDevice(&searchParams, &deviceInfo);
-
-    if (hFind) {
-        do {
-            BluetoothDevice dev;
-            dev.name = std::wstring(deviceInfo.szName);
-            wchar_t addrStr[32];
-            swprintf(addrStr, 32, L"%02X:%02X:%02X:%02X:%02X:%02X",
-                     deviceInfo.Address.rgBytes[0], deviceInfo.Address.rgBytes[1],
-                     deviceInfo.Address.rgBytes[2], deviceInfo.Address.rgBytes[3],
-                     deviceInfo.Address.rgBytes[4], deviceInfo.Address.rgBytes[5]);
-            dev.address = std::wstring(addrStr);
-            dev.paired = deviceInfo.fAuthenticated;
-            devices.push_back(dev);
-        } while (BluetoothFindNextDevice(hFind, &deviceInfo));
-        BluetoothFindDeviceClose(hFind);
-    }
-
+    
+    // Linux stub implementation - simulate some devices
+    BluetoothDevice dev1;
+    dev1.name = "Bluetooth Device 1";
+    dev1.address = "00:11:22:33:44:55";
+    dev1.paired = false;
+    dev1.rssi = -45;
+    devices.push_back(dev1);
+    
+    BluetoothDevice dev2;
+    dev2.name = "Bluetooth Device 2";
+    dev2.address = "AA:BB:CC:DD:EE:FF";
+    dev2.paired = true;
+    dev2.rssi = -60;
+    devices.push_back(dev2);
+    
     return devices;
 }
 
@@ -80,36 +66,9 @@ void BluetoothTab::scanDevices() {
     std::vector<BluetoothDevice> devices = getAvailableDevices();
     deviceTable->setRowCount((int)devices.size());
     for (int i = 0; i < (int)devices.size(); i++) {
-        deviceTable->setItem(i, 0, new QTableWidgetItem(QString::fromStdWString(devices[i].name)));
-        deviceTable->setItem(i, 1, new QTableWidgetItem(QString::fromStdWString(devices[i].address)));
+        deviceTable->setItem(i, 0, new QTableWidgetItem(devices[i].name));
+        deviceTable->setItem(i, 1, new QTableWidgetItem(devices[i].address));
         deviceTable->setItem(i, 2, new QTableWidgetItem(devices[i].paired ? "Yes" : "No"));
     }
-    void BluetoothTab::scanDevices() {
-    QProcess process;
-    process.start("powershell -Command \"Get-PnpDevice -Class Bluetooth | Select-Object Name,Status\"");
-    process.waitForFinished();
-    QString output = process.readAllStandardOutput();
-
-    // Parse output and populate QTableWidget
-    QStringList lines = output.split('\n');
-    for (const QString& line : lines) {
-        if (line.contains("Name") && line.contains("Status")) {
-            continue; // Skip header
-        }
-        QStringList columns = line.split(QRegularExpression("\\s+"), QString::SkipEmptyParts);
-        if (columns.size() >= 2) {
-            QString name = columns[0];
-            QString status = columns[1];
-            // Add to table
-            int row = deviceTable->rowCount();
-            deviceTable->insertRow(row);
-            deviceTable->setItem(row, 0, new QTableWidgetItem(name));
-            deviceTable->setItem(row, 1, new QTableWidgetItem(status));
-        }
-    }
-    btDevices->clear();
-    int devices = QRandomGenerator::global()->bounded(2, 6);
-    for(int i = 0; i < devices; ++i){
-        btDevices->addItem(QString("BT_Device_%1").arg(i+1));
-    }
+    qDebug() << "Bluetooth scan completed - found" << devices.size() << "devices";
 }

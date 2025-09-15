@@ -11,7 +11,7 @@ class WiFiModule : public QObject, public ICyberModule
     Q_INTERFACES(ICyberModule)
 
 public:
-    WifiModule() {}
+    WiFiModule() {}
     QString moduleName() const override { return "Wi-Fi Scanner"; }
     QWidget* createWidget(QWidget* parent = nullptr) override;
     void startScan() override;

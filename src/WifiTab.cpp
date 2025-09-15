@@ -6,8 +6,7 @@
 #include <QTextStream>
 #include <QMessageBox>
 #include <QVBoxLayout>
-#include <windows.h>
-#include <wlanapi.h>
+#include <QDebug>
 #include <objbase.h>
 #include <wtypes.h>
 #include <QStringList>

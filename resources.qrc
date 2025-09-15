@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>resources/darkmode.qss</file>
+        <file>assets/splash.png</file>
+        <file>assets/app_icon.png</file>
+    </qresource>
+</RCC>

@@ -1,44 +1,22 @@
 #include "PacketSniffer.h"
 #include <pcap.h>
 #include <QDebug>
-#include <QObject>
 
 PacketSniffer::PacketSniffer(QObject *parent) : QObject(parent) {}
 
-QStringList PacketSniffer::scanPackets()
-{
-    // Placeholder for scanning logic
-    return {"Packet-1", "Packet-2", "Packet-3"};
+QStringList PacketSniffer::scanPackets() {
+    QStringList results;
+    qDebug() << "Scanning packets (Linux stub implementation)";
+    
+    // Stub implementation - simulate capturing some packets
+    results << "Packet 1: 192.168.1.1 -> 192.168.1.100 (64 bytes)";
+    results << "Packet 2: 192.168.1.100 -> 8.8.8.8 (128 bytes)";
+    results << "Packet 3: 10.0.0.1 -> 10.0.0.50 (256 bytes)";
+    
+    return results;
 }
-std::vector<Packet> PacketSniffer::capture(int maxPackets) {
-    std::vector<Packet> packets;
-    char errbuf[PCAP_ERRBUF_SIZE];
-    pcap_if_t *alldevs;
-    if(pcap_findalldevs(&alldevs, errbuf) != 0) return packets;
-    if(!alldevs) return packets;
 
-    pcap_t *adhandle = pcap_open_live(alldevs->name, 65536, 1, 1000, errbuf);
-    if(!adhandle) return packets;
-
-    struct pcap_pkthdr *header;
-    const u_char *data;
-    int count = 0;
-
-    while(count < maxPackets && pcap_next_ex(adhandle, &header, &data) >= 0) {
-        Packet p;
-        p.size = header->len;
-        p.srcIP = "Captured"; // Simplified for demo
-        p.dstIP = "Captured";
-        packets.push_back(p);
-        count++;
-    }
-
-    pcap_close(adhandle);
-    pcap_freealldevs(alldevs);
-    return packets;
-}
 void PacketSniffer::parsePacketData(const QByteArray& rawData) {
-    // Parsing logic if needed
+    // Stub implementation for packet parsing
+    qDebug() << "Parsing packet data of size:" << rawData.size();
 }
-    // Platform-specific implementation
-    // For Windows, we might use WinPcap or Npcap
