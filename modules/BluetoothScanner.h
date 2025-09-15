@@ -38,9 +38,3 @@ private:
 };
 
 #endif // BLUETOOTHSCANNER_H
-    QVector<BluetoothDevice> devices;
-    void parseScanResults(const QByteArray& rawData);
-    // Platform-specific implementation
-    void startScan();
-};
-    void stopScan();

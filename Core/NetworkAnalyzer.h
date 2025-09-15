@@ -10,19 +10,17 @@ struct Network {
     bool secured;
 };
 
-struct BluetoothDevice {
-    QString name;
-    QString address;
-    bool paired;
-};
-
 class NetworkAnalyzer : public QObject {
     Q_OBJECT
 public:
     NetworkAnalyzer(QObject *parent = nullptr);
-    std::vector<Network> scanWifi();
-    std::vector<BluetoothDevice> scanBluetooth();
+    void analyzeNetwork();
+    void startAnalysis();
+    void stopAnalysis();
+    
 signals:
-    void wifiUpdated(const std::vector<Network>&);
-    void bluetoothUpdated(const std::vector<BluetoothDevice>&);
+    void analysisCompleted();
+    
+private:
+    bool analyzing;
 };

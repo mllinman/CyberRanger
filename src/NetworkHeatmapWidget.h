@@ -2,8 +2,8 @@
 #include <QGraphicsView>
 #include <QGraphicsEllipseItem>
 #include <QMap>
-#include "WiFiScanner.h"
-#include "BluetoothScanner.h"
+#include "../modules/WifiScanner.h"
+#include "../modules/BluetoothScanner.h"
 
 class NetworkHeatmapWidget : public QGraphicsView {
     Q_OBJECT

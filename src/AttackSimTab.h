@@ -6,16 +6,17 @@
 class AttackSimTab : public QWidget {
     Q_OBJECT
 public:
-    AttackSimTab(QWidget* parent=nullptr);
+    AttackSimTab(QWidget* parent = nullptr);
+    
+private slots:
+    void simulateAttack();
+    
 private:
     QTableWidget *networkTable;
     QPushButton *simulateBtn;
-private slots:
-    void simulateAttack();
-};
     void setupUI();
     void populateDummyData();
-    void onSimulateClicked();
+    
 signals:
     void simulateRequested();
 };
