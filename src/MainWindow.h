@@ -14,7 +14,7 @@
 #include "../modules/BluetoothScanner.h"
 #include "../modules/NetworkMapper.h"
 #include "utils/ReportGenerator.h"
-#include "utils/LicenseManager.h"
+#include "../Core/LicenseManager.h"
 #include "PluginsTab.h"
 #include "LogsTab.h"
 #include "SettingsTab.h"
