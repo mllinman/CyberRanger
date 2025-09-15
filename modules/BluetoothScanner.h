@@ -35,12 +35,8 @@ private:
     QTimer *scanTimer;
     QVector<BluetoothDevice> devices;
     void performScan();
+    void parseScanResults(const QByteArray& rawData);
+    // Platform-specific implementation
 };
 
 #endif // BLUETOOTHSCANNER_H
-    QVector<BluetoothDevice> devices;
-    void parseScanResults(const QByteArray& rawData);
-    // Platform-specific implementation
-    void startScan();
-};
-    void stopScan();

@@ -31,8 +31,3 @@ private:
 };
 
 #endif // NETWORKMAPPER_H
-    QVector<NetworkDevice> devices;
-    void performScan();
-};
-
-#endif // NETWORKMAPPER_H

@@ -138,7 +138,6 @@ void MainWindow::showDisclaimer() {
         close();
         return;
     }
-    }
 
     // Connect Wi-Fi signals
     connect(ui->btnScanWiFi, &QPushButton::clicked, this, &MainWindow::onScanWiFiClicked);
@@ -207,63 +206,19 @@ void MainWindow::onScanBluetoothClicked() {
 void MainWindow::onGenerateReportClicked() {
     reportGen->generateFullReport(ui->tableWiFi, ui->tableBT, ui->tableNetwork);
 }
+
 void MainWindow::openSettings() {
     if (!settingsWindow) settingsWindow = new SettingsWindow(this);
     settingsWindow->show();
 }
-void MainWindow::setupTabs()
-{
+
+void MainWindow::setupTabs() {
     tabs->addTab(new WiFiTab(), "Wi-Fi Scanner");
     tabs->addTab(new BluetoothTab(), "Bluetooth Scanner");
     tabs->addTab(new PortScannerTab(), "Port Scanner");
     tabs->addTab(new PacketSnifferTab(), "Packet Sniffer");
     tabs->addTab(new ExploitSimulationTab(), "Exploit Simulator");
 }
-    // Wi-Fi Scanner tab
-    QWidget *wifiTab = new QWidget();
-    QVBoxLayout *wifiLayout = new QVBoxLayout(wifiTab);
-    wifiLayout->addWidget(new QLabel("Wi-Fi Scanner Module Here"));
-    tabWidget->addTab(wifiTab, "Wi-Fi");
-
-    // Bluetooth Scanner tab
-    QWidget *btTab = new QWidget();
-    QVBoxLayout *btLayout = new QVBoxLayout(btTab);
-    btLayout->addWidget(new QLabel("Bluetooth Scanner Module Here"));
-    tabWidget->addTab(btTab, "Bluetooth");
-
-    // Port/Packet tab
-    QWidget *netTab = new QWidget();
-    QVBoxLayout *netLayout = new QVBoxLayout(netTab);
-    netLayout->addWidget(new QLabel("Port/Packet Module Here"));
-    tabWidget->addTab(netTab, "Network");
-
-    // Exploit simulator tab
-    QWidget *expTab = new QWidget();
-    QVBoxLayout *expLayout = new QVBoxLayout(expTab);
-    expLayout->addWidget(new QLabel("Exploit Simulator Module Here"));
-    tabWidget->addTab(expTab, "Simulator");
-}
-// In MainWindow.h
-WiFiGraphWidget *wifiGraph;
-NetworkHeatmapWidget *heatmap;
-
-// In MainWindow.cpp constructor
-wifiGraph = new WiFiGraphWidget(this);
-ui->tabWiFi->layout()->addWidget(wifiGraph);
-
-heatmap = new NetworkHeatmapWidget(this);
-ui->tabNetworkMap->layout()->addWidget(heatmap);
-
-// Update signals as new data comes in
-connect(wifiScanner, &WiFiScanner::networkDiscovered, [=](const WiFiNetwork &n){
-    wifiGraph->addNetwork(n);
-    heatmap->addWiFiNetwork(n);
-});
-
-connect(wifiScanner, &WiFiScanner::signalUpdated, [=](const WiFiNetwork &n){
-    wifiGraph->updateSignal(n);
-    heatmap->updateSignals();
-});
 
 void MainWindow::toggleTheme() {
     static bool dark = true;
@@ -277,10 +232,3 @@ void MainWindow::toggleTheme() {
         status->showMessage("Dark mode enabled", 3000);
     }
 }
-// In MainWindow constructor
-PentestTabWidget *pentestTab = new PentestTabWidget(this);
-ui->tabWidget->addTab(pentestTab, "Pentest Tools");
-
-// Enforce disclaimer once at start
-pentestTab->enforceDisclaimer();
-// In PentestTabWidget.cpp
