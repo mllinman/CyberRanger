@@ -70,6 +70,7 @@ private:
     void setupUI();
     void initTabs();
     void setupDarkMode();
+    void setDarkModePalette();
     void showDisclaimer();
     void setupMenu();
     void openSettings();

@@ -2,6 +2,7 @@
 #include <QGraphicsView>
 #include <QGraphicsEllipseItem>
 #include <QMap>
+#include <QTimer>
 #include "../modules/WifiScanner.h"
 #include "../modules/BluetoothScanner.h"
 
@@ -17,7 +18,7 @@ private:
     QGraphicsScene *scene;
     QMap<QString, QGraphicsEllipseItem*> wifiNodes;
     QMap<QString, QGraphicsEllipseItem*> btNodes;
-};
     WiFiScanner *wifiScanner;
     BluetoothScanner *btScanner;
     QTimer *updateTimer;
+};

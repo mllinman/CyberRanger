@@ -2,12 +2,12 @@
 #include <QtCharts/QChartView>
 #include <QtCharts/QLineSeries>
 #include <QtCharts/QValueAxis>
+#include <QtCharts/QChart>
 #include <QMap>
+#include <QTimer>
 #include "../modules/WifiScanner.h"
 
-using namespace QtCharts;
-
-class WiFiGraphWidget : public QChartView {
+class WiFiGraphWidget : public QtCharts::QChartView {
     Q_OBJECT
 public:
     explicit WiFiGraphWidget(QWidget *parent = nullptr);
@@ -15,11 +15,11 @@ public:
     void updateSignal(const WiFiNetwork &network);
 
 private:
-    QChart *chart;
-    QValueAxis *axisX;
-    QValueAxis *axisY;
-    QMap<QString, QLineSeries*> networkSeries;
-    int timeIndex = 0;
-};
+    QtCharts::QChart *chart;
+    QtCharts::QValueAxis *axisX;
+    QtCharts::QValueAxis *axisY;
+    QMap<QString, QtCharts::QLineSeries*> networkSeries;
     WiFiScanner *scanner;
     QTimer *updateTimer;
+    int timeIndex = 0;
+};

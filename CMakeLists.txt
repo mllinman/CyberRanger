@@ -16,9 +16,10 @@ include_directories(modules)
 
 file(GLOB SOURCES "src/*.cpp" "src/utils/*.cpp" "Core/*.cpp" "modules/*.cpp")
 file(GLOB HEADERS "src/*.h" "src/utils/*.h" "Core/*.h" "modules/*.h")
+file(GLOB RESOURCES "*.qrc")
 
 qt_standard_project_setup()
-add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
+add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS} ${RESOURCES})
 
 target_link_libraries(${PROJECT_NAME} Qt6::Core Qt6::Widgets Qt6::Gui Qt6::Network Qt6::Charts)
 
