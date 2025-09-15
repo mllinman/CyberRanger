@@ -41,8 +41,7 @@ void LicenseManager::showDisclaimerDialog(QWidget *parent)
 
     if(disclaimer.exec() == QMessageBox::Ok && input->text().trimmed() == "YES") {
         acknowledged = true;
-    }
-}
-    else {
+    } else {
         acknowledged = false;
     }
+}

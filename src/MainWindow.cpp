@@ -43,7 +43,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
         QWidget* widget = module->createWidget();
         tabWidget->addTab(widget, module->moduleName());
     }
-}
 
     setupTabs();
     settings = new SettingsManager(this);
@@ -53,14 +52,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     setupMenu();
     setupDarkMode();
     showDisclaimer();
-
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
-{
-    ui->setupUi(this);
-    settingsWindow = nullptr;
-    setupMenu();
 }
 
 void MainWindow::setupUI() {
@@ -71,43 +62,16 @@ void MainWindow::setupUI() {
     tabs->addTab(new DashboardTab(this), "Dashboard");
     tabs->addTab(new WiFiTab(this), "Wi-Fi");
     tabs->addTab(new BluetoothTab(this), "Bluetooth");
-
-    tabs = new QTabWidget(this);
-    dashboardTab = new DashboardTab();
-    wifiTab = new WifiTab();
-    btTab = new BluetoothTab();
-    pluginTab = new PluginTab(this);
-    scanTab = new NetworkScanTab();
-    captureTab = new PacketCaptureTab();
-    pluginsTab = new PluginsTab();
-    logsTab = new LogsTab();
-    settingsTab = new SettingsTab();
-
-    // Plugin Manager tab
-    QWidget *pluginTab = new QWidget(this);
-    QVBoxLayout *pluginLayout = new QVBoxLayout(pluginTab);
-    pluginTab->setLayout(pluginLayout);
-    tabs->addTab(pluginTab, "Plugins");
-// Initialize modules
+    
+    // Initialize modules
     wifiScanner = new WiFiScanner(this);
     btScanner = new BluetoothScanner(this);
     networkMapper = new NetworkMapper(this);
     reportGen = new ReportGenerator(this);
     licenseMgr = new LicenseManager(this);
-    tabs->addTab(dashboardTab, "Dashboard");
-    tabs->addTab(wifiTab, "Wi-Fi");
-    tabs->addTab(btTab, "Bluetooth");
-    tabs->addTab(pluginTab, "Plugins");
-    tabs->addTab(scanTab, "Network Scan");
-    tabs->addTab(captureTab, "Packet Capture");
-    tabs->addTab(pluginsTab, "Plugins");
-    tabs->addTab(logsTab, "Logs");
-    tabs->addTab(settingsTab, "Settings");
-
-    tabs = new QTabWidget(this);
+    
     setCentralWidget(tabs);
     setupTabs();
-}
 
     // Load plugins
     pluginManager = new PluginManager(this);
@@ -116,6 +80,7 @@ void MainWindow::setupUI() {
     }
 }
 
+void MainWindow::setupDarkMode() {
     // Apply dark theme
     QFile f("resources/darktheme.qss");
     if(f.open(QFile::ReadOnly)) {
@@ -166,13 +131,13 @@ void MainWindow::setDarkMode() {
     darkPalette.setColor(QPalette::Highlight, QColor(42, 130, 218));
     QApplication::setPalette(darkPalette);
 }
-// Dark Mode
-    setupDarkMode();
 
+void MainWindow::showDisclaimer() {
     // Show Disclaimer
     if(!licenseMgr->acknowledgeDisclaimer(this)) {
         close();
         return;
+    }
     }
 
     // Connect Wi-Fi signals

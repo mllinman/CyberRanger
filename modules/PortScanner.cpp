@@ -2,20 +2,13 @@
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <QDebug>
-#include <QObject>
 
-PortScanner::PortScanner(QObject *parent) : QObject(parent) {}
-
-QStringList PortScanner::scanPorts()
-{
-    // Placeholder for scanning logic
-    return {"Port-1", "Port-2", "Port-3"};
-}
-    // Placeholder for scanning logic
+PortScanner::PortScanner() {
+    // Initialize Winsock
     WSADATA wsaData;
     WSAStartup(MAKEWORD(2,2), &wsaData);
-    return {};
 }
+
 std::vector<PortResult> PortScanner::scan(const QString& ip, int startPort, int endPort) {
     std::vector<PortResult> results;
     for(int port=startPort; port<=endPort; ++port) {
@@ -31,6 +24,7 @@ std::vector<PortResult> PortScanner::scan(const QString& ip, int startPort, int 
     }
     return results;
 }
+
 bool PortScanner::isPortOpen(const QHostAddress& host, quint16 port) {
     SOCKET sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     sockaddr_in addr;

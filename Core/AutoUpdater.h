@@ -10,4 +10,8 @@ public:
 signals:
     void updateAvailable(const QString &version, const QString &downloadUrl);
     void noUpdate();
+    void errorOccurred(const QString &error);
+
+private:
+    QString url;
 };

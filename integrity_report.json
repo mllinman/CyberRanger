@@ -1,0 +1,626 @@
+{
+  "integrity": {
+    "/home/runner/work/CyberRanger/CyberRanger/Core/LicenseManager.cpp": {
+      "checksum": "2bce2f70e28f90e791e6920ffdecc50ca979259c3c6b3ec0a1ae5b5a7fb10142",
+      "size": 1631,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/Core/SettingsManager.cpp": {
+      "checksum": "8aa6638a3716ac83063e300601e1c7925f9c53ddaf82f66ca03fdf8205560e56",
+      "size": 566,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/Core/PluginManager.cpp": {
+      "checksum": "99c3b860aa49fef79b8ecf4c1a2860b1ceb537d396cb5244099de9808c60bb31",
+      "size": 1338,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/Core/AutoUpdater.cpp": {
+      "checksum": "93a37717664f254e01d248284e00c07d558bc5b56cb71824dd559d63176b143c",
+      "size": 1265,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/Core/NetworkAnalyzer.cpp": {
+      "checksum": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/modules/WifiScanner.cpp": {
+      "checksum": "993d106e5a91d0098b10f3b5cb89f607bf399cd6b0915e3be2c30350a6ae3c01",
+      "size": 3021,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/modules/NetworkMapper.cpp": {
+      "checksum": "41b354ad58e2d501b3fea7446a46318d4a8eab932f4c21cbd5656a2cbabff464",
+      "size": 1322,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/modules/ExploitSimulator.cpp": {
+      "checksum": "b83364ca19a54e40e6eeffbdca267c2e3cfb08b8857c445b6e2f1605d6e6fb22",
+      "size": 476,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/modules/Logger.cpp": {
+      "checksum": "3f3718a3c0ff6ba5598e5d3c0adae9e151023ab2612723187fdb67719bcd072b",
+      "size": 429,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/modules/PacketSniffer.cpp": {
+      "checksum": "399048fe9498d7a62a29f8aeb3b97cadd5ef814dd54d3e4a42c36cb2c572eadf",
+      "size": 1253,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/modules/BluetoothScanner.cpp": {
+      "checksum": "53cf750be190cbef28edbbfa8aec61ec5d26cb2a8dd5de15bcfd4b5c2b7f78f2",
+      "size": 2721,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/modules/PortScanner.cpp": {
+      "checksum": "c959ab19a65ad32c4a5b431bba4c187e55b7311e15c03295393a532b8ddb6662",
+      "size": 1394,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/DisclaimerWindow.cpp": {
+      "checksum": "3b6427b9df3162e03f3aa16e71f66d34669d92d8ab01ad963ecef131137f36d2",
+      "size": 2117,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/MainWindow.cpp": {
+      "checksum": "35c282a834bdbd18e1e74892382550fa3ea8904bc0026091e8fdf323474f3c97",
+      "size": 10810,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/PentestTabWidget.cpp": {
+      "checksum": "3ad9ea312e17d5ca4f28aee1ae57d672046dabfa682161bc3801081d68dea6c0",
+      "size": 3447,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/ModuleLoader.cpp": {
+      "checksum": "1de0d498c9acd70b53af3e839f6bb3b2c8d2c18e70ee81a1e875f7a98a5a5c78",
+      "size": 629,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/NetworkUtils.cpp": {
+      "checksum": "513071106c1c13497832083e164f6542ae52d83d121442704178331ca8db7563",
+      "size": 2418,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/LogsTab.cpp": {
+      "checksum": "0c70e1af03f6c7b103331b3055216569f43a74a852489b0f01dd5f18d72160d9",
+      "size": 984,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/BluetoothTab.cpp": {
+      "checksum": "565fbcab5639880ee0cff4d4a97a0635a9ab3fcc667b082e4de8872021711c72",
+      "size": 4373,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/DashboardTab.cpp": {
+      "checksum": "b33303e1d95103c5ef64f29d9e82195961c6d92126e8b7b677a161a680967c3c",
+      "size": 3516,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/WifiModule.cpp": {
+      "checksum": "2497b7a89e926b15b24ebac20953a83554c7d7cf122bfcb1bfcf10082dcec14c",
+      "size": 645,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/NetworkScanTab.cpp": {
+      "checksum": "b5256096eee777625131d6a0c6c9c6b44c4d18daba011970ad83a5d1624dbd5e",
+      "size": 378,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/AttackSimTab.cpp": {
+      "checksum": "024323825383beb4f8b83bf52e2b350028e2427e5caa7b15eddcc06061036ac2",
+      "size": 1357,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/ThreatIntelManager.cpp": {
+      "checksum": "431f03093939f6b307a20bcb2c4f58c7c30e469c362dfe38e36b6e48206a2c0b",
+      "size": 1079,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/PluginTab.cpp": {
+      "checksum": "f922da3d26dda24b4c8515157f794c859712071d9190beb048f4b85222c7dfe7",
+      "size": 1279,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/PentestModule.cpp": {
+      "checksum": "8b52ceaec08a0cc1829aea4f1d6a0a18e63414ec4f650f4844c2757ee2c73600",
+      "size": 1515,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/WifiGraphWidget.cpp": {
+      "checksum": "7193c89d3f0095657f5663e73e977d05823d3854f42ea50a3a1ea7447dcac414",
+      "size": 1547,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/Main.cpp": {
+      "checksum": "48c995ee9198f40a54c22da584e40486b59852f973253267a244b3c442d1d04b",
+      "size": 916,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/WifiTab.cpp": {
+      "checksum": "8097143b01f09b5465214cc7cd5ed40bd9f8ba6b9cbe94ab8752eb9493090f48",
+      "size": 4548,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/ModuleInterface.cpp": {
+      "checksum": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/plugins/ExamplePlugin/ExamplePlugin.cpp": {
+      "checksum": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/Core/AutoUpdater.h": {
+      "checksum": "eb058edb7f1883e72116151fa579addf31daa7c5437b4bad466dfe165e6e0edb",
+      "size": 392,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/Core/PluginManager.h": {
+      "checksum": "86bcea4e2fac917d308cf48e5b0ef1b2ec5a501d66d3658f058ee63806d8e111",
+      "size": 709,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/Core/NetworkAnalyzer.h": {
+      "checksum": "cd576dd0715c4ebecadbc3aae93dfac7100065a91f320688b538c65705dd3110",
+      "size": 586,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/Core/SettingsManager.h": {
+      "checksum": "a18632640419411995e19a92728ce72cd9053baedea29f8efdf43ae2ba7be450",
+      "size": 348,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/Core/LicenseManager.h": {
+      "checksum": "6a38e2e2500f76b3f0bbf57df4e628d1217c4e84c77532bda7271d2cbba57c2e",
+      "size": 452,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/Core/IPlugin.h": {
+      "checksum": "23e2e45ba7b788d09257b19a012c564d16f97ebab9f6833c3a079680867daca9",
+      "size": 1125,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/modules/ExploitSimulator.h": {
+      "checksum": "6617095bf117e42637c96c4f3dd8c011f3b12f0a873fe88713e73b4e4e034dba",
+      "size": 382,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/modules/NetworkMapper.h": {
+      "checksum": "11d97a033b1c4dcb11013d66d569dee54c0b099ca086f16bc806b306aede8a4f",
+      "size": 668,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/modules/PacketSniffer.h": {
+      "checksum": "f65cd31d7b8e14ddc7a1386ee2d55a696784fe5067977de7b2df0312f5c53feb",
+      "size": 413,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/modules/PortScanner.h": {
+      "checksum": "8c057f37336fee7646eff3390ddc5e0d19e64619a3667aff0dacc3f2478853d4",
+      "size": 488,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/modules/Logger.h": {
+      "checksum": "381a70d6ca4730a996d3517cca6c1f47fbb10fd75c9ec33f84f17814914d008b",
+      "size": 192,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/modules/WifiScanner.h": {
+      "checksum": "8e5adc7613e4725a005d045643505f9ece3e453ee385d129cfe48879e2c8534f",
+      "size": 1222,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/modules/BluetoothScanner.h": {
+      "checksum": "b99a61d35fca1316c7445947b6522889036a523081966dd8ed61341d7f1ad7bc",
+      "size": 905,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/ModuleLoader.h": {
+      "checksum": "56cffc437e9c7639ac3ae3ebdf63345be1675e2d4fae023aa1d0530f15fbfca4",
+      "size": 422,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/BluetoothTab.h": {
+      "checksum": "26e236479bde1a8054fb1aa212685651b4e67e5312934f037bd90ef2d9ef91dc",
+      "size": 965,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/LogsTab.h": {
+      "checksum": "b590afd8f9b9e2cec6e32532124447dab4e4eabe346950a24a8e8b01e62d357e",
+      "size": 393,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/ExploitSimTab.h": {
+      "checksum": "60afebf4590c19d0eefb8152b7df4aa43d48a4944d772bb1f2376fedcb284692",
+      "size": 931,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/PentestModule.h": {
+      "checksum": "1110060f2de45fb468473752b902cc745dfecfeade605721e9a15658aa4841db",
+      "size": 756,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/DashboardTab.h": {
+      "checksum": "91479470011f30a95c99bdda0ad477c32685548a762747eee0626578e95aa410",
+      "size": 1258,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/WifiGraphWidget.h": {
+      "checksum": "808786a47f61dff77d474489f071f29248ae6e5393f6648abe904421a6e9ac27",
+      "size": 596,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/DisclaimerWindow.h": {
+      "checksum": "776d0f91bbc58b787ae6973b42982010b0b52cc6a9bab2c05662f3eb947d5b6b",
+      "size": 593,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/PentestTabWidget.h": {
+      "checksum": "1ce0f0d1a4ba8768e799cc538edf6ec3953b8fc92721f467ac5576d7861b6f34",
+      "size": 870,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/ThreatIntelManager.h": {
+      "checksum": "4c5a6895357f26f5167d060357ef74ebae2a9b1d7e20da6cb01ee135e6a865db",
+      "size": 677,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/AttackSimTab.h": {
+      "checksum": "a7fb54c99b361f6f3186bf3b719467dfae9ce0733f52a44cb8e1bc363292513a",
+      "size": 419,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/NetworkScanTab.h": {
+      "checksum": "57962f0ad5a7571092681d29bdb1b66ec7ac9635014ce054def890aec4bdb74a",
+      "size": 621,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/WifiTab.h": {
+      "checksum": "87bb0e36441b048651a5628f5b6fa6e9a2884780e7faf6f8615bc92d30b4a749",
+      "size": 958,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/NetworkHeatmapWidget.h": {
+      "checksum": "6688f54ebbd9c5af292279d54ec1da35e5d34bf931a4c71458ad471111f8ea8a",
+      "size": 645,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/MainWindow.h": {
+      "checksum": "19ee939356e547d953eea22e9016217cbf0617671ced89cb671e49d365be5369",
+      "size": 1823,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/ModuleInterface.h": {
+      "checksum": "9df84b266a2b95cdd3ff53efb206e48323a66fe2a84cdc56fc4720baeb3f2474",
+      "size": 470,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/WifiModule.h": {
+      "checksum": "3cb99983e0a247dcb0bff2f58ab5f6c0d44cc8f76cf916ae09b1665c1d20badd",
+      "size": 522,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/NetworkUtils.h": {
+      "checksum": "9dea4d72e80a90c847c05ea6c3d04126b8ebd0fd195a1cb7b4e7a7df30ceff1c",
+      "size": 364,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/PluginTab.h": {
+      "checksum": "13095fba65c00836d45a03f3515ef2cdb978341035f2b302285cad2e7cb794b2",
+      "size": 327,
+      "exists": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/plugins/ExamplePlugin/ExamplePlugin.h": {
+      "checksum": "8a09b7a1054fedc2a52d2fd2157fa3fae45a96054d24a003c45ce9fc99943552",
+      "size": 345,
+      "exists": true
+    }
+  },
+  "syntax_issues": {
+    "/home/runner/work/CyberRanger/CyberRanger/Core/LicenseManager.cpp": {
+      "basic_issues": [],
+      "has_issues": false
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/Core/SettingsManager.cpp": {
+      "basic_issues": [],
+      "has_issues": false
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/Core/PluginManager.cpp": {
+      "basic_issues": [],
+      "has_issues": false
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/Core/AutoUpdater.cpp": {
+      "basic_issues": [],
+      "has_issues": false
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/Core/NetworkAnalyzer.cpp": {
+      "basic_issues": [],
+      "has_issues": false
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/modules/WifiScanner.cpp": {
+      "basic_issues": [
+        "Line 63: Possible stray comma"
+      ],
+      "has_issues": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/modules/NetworkMapper.cpp": {
+      "basic_issues": [],
+      "has_issues": false
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/modules/ExploitSimulator.cpp": {
+      "basic_issues": [],
+      "has_issues": false
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/modules/Logger.cpp": {
+      "basic_issues": [],
+      "has_issues": false
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/modules/PacketSniffer.cpp": {
+      "basic_issues": [],
+      "has_issues": false
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/modules/BluetoothScanner.cpp": {
+      "basic_issues": [],
+      "has_issues": false
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/modules/PortScanner.cpp": {
+      "basic_issues": [
+        "Unbalanced braces: -1"
+      ],
+      "has_issues": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/DisclaimerWindow.cpp": {
+      "basic_issues": [],
+      "has_issues": false
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/MainWindow.cpp": {
+      "basic_issues": [
+        "Unbalanced braces: -4"
+      ],
+      "has_issues": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/PentestTabWidget.cpp": {
+      "basic_issues": [],
+      "has_issues": false
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/ModuleLoader.cpp": {
+      "basic_issues": [],
+      "has_issues": false
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/NetworkUtils.cpp": {
+      "basic_issues": [],
+      "has_issues": false
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/LogsTab.cpp": {
+      "basic_issues": [],
+      "has_issues": false
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/BluetoothTab.cpp": {
+      "basic_issues": [
+        "Line 65: Possible stray comma",
+        "Line 66: Possible stray comma",
+        "Line 67: Possible stray comma",
+        "Unbalanced braces: 1"
+      ],
+      "has_issues": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/DashboardTab.cpp": {
+      "basic_issues": [],
+      "has_issues": false
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/WifiModule.cpp": {
+      "basic_issues": [],
+      "has_issues": false
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/NetworkScanTab.cpp": {
+      "basic_issues": [],
+      "has_issues": false
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/AttackSimTab.cpp": {
+      "basic_issues": [],
+      "has_issues": false
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/ThreatIntelManager.cpp": {
+      "basic_issues": [
+        "Line 15: Possible stray comma",
+        "Line 16: Possible stray comma"
+      ],
+      "has_issues": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/PluginTab.cpp": {
+      "basic_issues": [
+        "Line 38: Possible misplaced 'else' statement"
+      ],
+      "has_issues": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/PentestModule.cpp": {
+      "basic_issues": [],
+      "has_issues": false
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/WifiGraphWidget.cpp": {
+      "basic_issues": [
+        "Unbalanced braces: -1"
+      ],
+      "has_issues": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/Main.cpp": {
+      "basic_issues": [],
+      "has_issues": false
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/WifiTab.cpp": {
+      "basic_issues": [
+        "Unbalanced braces: -1"
+      ],
+      "has_issues": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/ModuleInterface.cpp": {
+      "basic_issues": [],
+      "has_issues": false
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/plugins/ExamplePlugin/ExamplePlugin.cpp": {
+      "basic_issues": [],
+      "has_issues": false
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/Core/AutoUpdater.h": {
+      "basic_issues": [],
+      "has_issues": false
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/Core/PluginManager.h": {
+      "basic_issues": [],
+      "has_issues": false
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/Core/NetworkAnalyzer.h": {
+      "basic_issues": [],
+      "has_issues": false
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/Core/SettingsManager.h": {
+      "basic_issues": [],
+      "has_issues": false
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/Core/LicenseManager.h": {
+      "basic_issues": [],
+      "has_issues": false
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/Core/IPlugin.h": {
+      "basic_issues": [],
+      "has_issues": false
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/modules/ExploitSimulator.h": {
+      "basic_issues": [
+        "Unbalanced braces: -1"
+      ],
+      "has_issues": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/modules/NetworkMapper.h": {
+      "basic_issues": [
+        "Unbalanced braces: -1"
+      ],
+      "has_issues": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/modules/PacketSniffer.h": {
+      "basic_issues": [
+        "Unbalanced braces: -1"
+      ],
+      "has_issues": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/modules/PortScanner.h": {
+      "basic_issues": [
+        "Unbalanced braces: -1"
+      ],
+      "has_issues": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/modules/Logger.h": {
+      "basic_issues": [],
+      "has_issues": false
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/modules/WifiScanner.h": {
+      "basic_issues": [],
+      "has_issues": false
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/modules/BluetoothScanner.h": {
+      "basic_issues": [
+        "Unbalanced braces: -1"
+      ],
+      "has_issues": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/ModuleLoader.h": {
+      "basic_issues": [],
+      "has_issues": false
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/BluetoothTab.h": {
+      "basic_issues": [],
+      "has_issues": false
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/LogsTab.h": {
+      "basic_issues": [],
+      "has_issues": false
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/ExploitSimTab.h": {
+      "basic_issues": [
+        "Unbalanced braces: -1"
+      ],
+      "has_issues": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/PentestModule.h": {
+      "basic_issues": [
+        "Unbalanced braces: -1"
+      ],
+      "has_issues": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/DashboardTab.h": {
+      "basic_issues": [],
+      "has_issues": false
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/WifiGraphWidget.h": {
+      "basic_issues": [],
+      "has_issues": false
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/DisclaimerWindow.h": {
+      "basic_issues": [
+        "Unbalanced braces: -1"
+      ],
+      "has_issues": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/PentestTabWidget.h": {
+      "basic_issues": [
+        "Unbalanced braces: -2"
+      ],
+      "has_issues": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/ThreatIntelManager.h": {
+      "basic_issues": [
+        "Unbalanced braces: -1"
+      ],
+      "has_issues": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/AttackSimTab.h": {
+      "basic_issues": [
+        "Unbalanced braces: -1"
+      ],
+      "has_issues": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/NetworkScanTab.h": {
+      "basic_issues": [],
+      "has_issues": false
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/WifiTab.h": {
+      "basic_issues": [],
+      "has_issues": false
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/NetworkHeatmapWidget.h": {
+      "basic_issues": [],
+      "has_issues": false
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/MainWindow.h": {
+      "basic_issues": [
+        "Unbalanced braces: -1"
+      ],
+      "has_issues": true
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/ModuleInterface.h": {
+      "basic_issues": [],
+      "has_issues": false
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/WifiModule.h": {
+      "basic_issues": [],
+      "has_issues": false
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/NetworkUtils.h": {
+      "basic_issues": [],
+      "has_issues": false
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/src/PluginTab.h": {
+      "basic_issues": [],
+      "has_issues": false
+    },
+    "/home/runner/work/CyberRanger/CyberRanger/plugins/ExamplePlugin/ExamplePlugin.h": {
+      "basic_issues": [],
+      "has_issues": false
+    }
+  }
+}
