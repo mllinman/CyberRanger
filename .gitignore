@@ -1,6 +1,22 @@
 # Build directories
 build/
 cmake-build-*/
+client/.next/
+client/out/
+server/dist/
+
+# Dependencies
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# Environment files
+.env
+.env.local
+.env.production
+.env.staging
+client/.env.local
+server/.env
 
 # Qt generated files
 *.user
@@ -40,3 +56,21 @@ Thumbs.db
 *.tmp
 *.temp
 *.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+
+# Dependency directories
+jspm_packages/
+
+# Optional npm cache directory
+.npm
+
+# Optional REPL history
+.node_repl_history
