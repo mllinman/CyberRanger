@@ -4,6 +4,10 @@ import jwt from 'jsonwebtoken'
 import User from '../models/User'
 import { authenticateToken } from '../middleware/auth'
 
+interface AuthRequest extends express.Request {
+  user?: any
+}
+
 const router = express.Router()
 
 // Register new user
@@ -150,7 +154,7 @@ router.post('/login', async (req, res) => {
 })
 
 // Get current user profile
-router.get('/me', authenticateToken, async (req, res) => {
+router.get('/me', authenticateToken, async (req: AuthRequest, res) => {
   try {
     const user = await User.findById(req.user.userId).select('-password')
     if (!user) {
@@ -183,7 +187,7 @@ router.get('/me', authenticateToken, async (req, res) => {
 })
 
 // Update user profile
-router.put('/me', authenticateToken, async (req, res) => {
+router.put('/me', authenticateToken, async (req: AuthRequest, res) => {
   try {
     const allowedUpdates = ['firstName', 'lastName', 'phone', 'address', 'dateOfBirth']
     const updates: any = {}
@@ -232,7 +236,7 @@ router.put('/me', authenticateToken, async (req, res) => {
 })
 
 // Change password
-router.put('/change-password', authenticateToken, async (req, res) => {
+router.put('/change-password', authenticateToken, async (req: AuthRequest, res) => {
   try {
     const { currentPassword, newPassword } = req.body
 

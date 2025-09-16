@@ -2,6 +2,10 @@ import express from 'express'
 import Stripe from 'stripe'
 import { authenticateToken } from '../middleware/auth'
 
+interface AuthRequest extends express.Request {
+  user?: any
+}
+
 const router = express.Router()
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2023-10-16'
@@ -44,7 +48,7 @@ router.post('/create-payment-intent', async (req, res) => {
 })
 
 // Confirm payment
-router.post('/confirm-payment', authenticateToken, async (req, res) => {
+router.post('/confirm-payment', authenticateToken, async (req: AuthRequest, res) => {
   try {
     const { paymentIntentId } = req.body
 
@@ -105,7 +109,7 @@ router.post('/webhook', express.raw({ type: 'application/json' }), (req, res) =>
 })
 
 // Get payment methods for a customer
-router.get('/payment-methods', authenticateToken, async (req, res) => {
+router.get('/payment-methods', authenticateToken, async (req: AuthRequest, res) => {
   try {
     const customerId = req.body.customerId
 
@@ -132,7 +136,7 @@ router.get('/payment-methods', authenticateToken, async (req, res) => {
 })
 
 // Create a refund
-router.post('/refund', authenticateToken, async (req, res) => {
+router.post('/refund', authenticateToken, async (req: AuthRequest, res) => {
   try {
     const { paymentIntentId, amount, reason = 'requested_by_customer' } = req.body
 

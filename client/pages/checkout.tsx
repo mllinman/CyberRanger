@@ -39,6 +39,7 @@ function CheckoutForm() {
   
   const [loading, setLoading] = useState(false)
   const [clientSecret, setClientSecret] = useState('')
+  const [mounted, setMounted] = useState(false)
   
   const total = getTotal()
   const shipping = total > 100 ? 0 : 9.99
@@ -46,11 +47,17 @@ function CheckoutForm() {
   const finalTotal = total + shipping + tax
 
   useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  useEffect(() => {
     // Create payment intent when component mounts
-    if (items.length > 0) {
+    if (items.length > 0 && mounted) {
       createPaymentIntent()
+    } else if (mounted && items.length === 0) {
+      router.push('/cart')
     }
-  }, [items])
+  }, [items, mounted])
 
   const createPaymentIntent = async () => {
     try {
@@ -135,8 +142,11 @@ function CheckoutForm() {
     },
   }
 
+  if (!mounted) {
+    return null
+  }
+
   if (items.length === 0) {
-    router.push('/cart')
     return null
   }
 
