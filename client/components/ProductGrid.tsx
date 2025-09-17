@@ -1,155 +1,201 @@
-import { useState, useEffect } from 'react'
-import ProductCard from './ProductCard'
-import { Product } from '../lib/store'
+import { useState } from 'react'
+import { Wifi, Bluetooth, Network, Shield, Terminal, Zap, Eye, Lock, AlertTriangle } from 'lucide-react'
 
-// Sample products data - in a real app, this would come from an API
-const sampleProducts: Product[] = [
+interface Feature {
+  id: string
+  name: string
+  description: string
+  icon: any
+  category: string
+  capabilities: string[]
+  warning: string
+}
+
+// CyberRecon features data
+const cyberReconFeatures: Feature[] = [
   {
-    id: '1',
-    name: 'Wireless Headphones',
-    description: 'Premium wireless headphones with noise cancellation',
-    price: 199.99,
-    image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop',
-    category: 'Electronics',
-    stock: 15,
-    rating: 4.8,
-    reviews: 124
+    id: 'wifi-scanner',
+    name: 'Wi-Fi Network Scanner',
+    description: 'Advanced wireless network discovery and analysis with encryption detection',
+    icon: Wifi,
+    category: 'Network Analysis',
+    capabilities: ['WEP/WPA/WPA2/WPA3 Detection', 'Signal Strength Analysis', 'Hidden Network Discovery', 'Channel Mapping'],
+    warning: 'Only scan networks you own or have permission to test'
   },
   {
-    id: '2',
-    name: 'Smart Watch',
-    description: 'Feature-rich smartwatch with health tracking',
-    price: 299.99,
-    image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop',
-    category: 'Electronics',
-    stock: 8,
-    rating: 4.6,
-    reviews: 89
+    id: 'bluetooth-recon',
+    name: 'Bluetooth Reconnaissance', 
+    description: 'Comprehensive Bluetooth device discovery and vulnerability assessment',
+    icon: Bluetooth,
+    category: 'Device Discovery',
+    capabilities: ['Device Enumeration', 'Service Discovery', 'Vulnerability Scanning', 'Pairing Analysis'],
+    warning: 'Authorized testing only - respect privacy laws'
   },
   {
-    id: '3',
-    name: 'Laptop Backpack',
-    description: 'Durable laptop backpack with multiple compartments',
-    price: 79.99,
-    image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&h=400&fit=crop',
-    category: 'Accessories',
-    stock: 22,
-    rating: 4.4,
-    reviews: 67
+    id: 'network-topology',
+    name: 'Network Topology Mapper',
+    description: 'Real-time network structure analysis and host discovery',
+    icon: Network,
+    category: 'Infrastructure',
+    capabilities: ['Host Discovery', 'Port Scanning', 'Service Detection', 'OS Fingerprinting'],
+    warning: 'Use only on networks you have explicit permission to test'
   },
   {
-    id: '4',
-    name: 'Bluetooth Speaker',
-    description: 'Portable bluetooth speaker with powerful bass',
-    price: 89.99,
-    image: 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=400&h=400&fit=crop',
-    category: 'Electronics',
-    stock: 12,
-    rating: 4.5,
-    reviews: 156
+    id: 'vuln-scanner',
+    name: 'Vulnerability Scanner',
+    description: 'Automated security vulnerability detection and assessment',
+    icon: Shield,
+    category: 'Security Assessment',
+    capabilities: ['CVE Database Lookup', 'Exploit Detection', 'Risk Assessment', 'Report Generation'],
+    warning: 'Ethical hacking and authorized penetration testing only'
   },
   {
-    id: '5',
-    name: 'Gaming Mouse',
-    description: 'High-precision gaming mouse with RGB lighting',
-    price: 59.99,
-    image: 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=400&h=400&fit=crop',
-    category: 'Gaming',
-    stock: 18,
-    rating: 4.7,
-    reviews: 93
+    id: 'packet-analyzer',
+    name: 'Packet Analyzer',
+    description: 'Deep packet inspection and network traffic analysis',
+    icon: Eye,
+    category: 'Traffic Analysis', 
+    capabilities: ['Protocol Analysis', 'Traffic Monitoring', 'Anomaly Detection', 'Data Extraction'],
+    warning: 'Monitor only your own network traffic legally'
   },
   {
-    id: '6',
-    name: 'USB-C Hub',
-    description: 'Multi-port USB-C hub for laptops and tablets',
-    price: 49.99,
-    image: 'https://images.unsplash.com/photo-1625842268584-8f3296236761?w=400&h=400&fit=crop',
-    category: 'Accessories',
-    stock: 25,
-    rating: 4.3,
-    reviews: 45
+    id: 'security-audit',
+    name: 'Security Auditing Suite',
+    description: 'Comprehensive security posture assessment and compliance checking',
+    icon: Lock,
+    category: 'Compliance',
+    capabilities: ['Policy Validation', 'Configuration Review', 'Compliance Reporting', 'Risk Scoring'],
+    warning: 'Audit only systems you own or are authorized to assess'
   }
 ]
 
-export default function ProductGrid() {
-  const [products, setProducts] = useState<Product[]>([])
-  const [loading, setLoading] = useState(true)
+export default function FeaturesGrid() {
   const [filter, setFilter] = useState<string>('all')
 
-  useEffect(() => {
-    // Simulate API call
-    setTimeout(() => {
-      setProducts(sampleProducts)
-      setLoading(false)
-    }, 1000)
-  }, [])
-
-  const categories = ['all', ...new Set(products.map(p => p.category.toLowerCase()))]
+  const categories = ['all', ...new Set(cyberReconFeatures.map(f => f.category.toLowerCase().replace(/\s+/g, '-')))]
   
-  const filteredProducts = filter === 'all' 
-    ? products 
-    : products.filter(p => p.category.toLowerCase() === filter)
-
-  if (loading) {
-    return (
-      <section className="py-16 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900">Featured Products</h2>
-            <p className="text-gray-600 mt-2">Discover our latest collection</p>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            {[...Array(8)].map((_, i) => (
-              <div key={i} className="animate-pulse">
-                <div className="bg-gray-300 rounded-lg h-64 mb-4"></div>
-                <div className="h-4 bg-gray-300 rounded mb-2"></div>
-                <div className="h-4 bg-gray-300 rounded w-2/3"></div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-    )
-  }
+  const filteredFeatures = filter === 'all' 
+    ? cyberReconFeatures 
+    : cyberReconFeatures.filter(f => f.category.toLowerCase().replace(/\s+/g, '-') === filter)
 
   return (
-    <section className="py-16 px-4 sm:px-6 lg:px-8">
+    <section className="py-24 px-4 sm:px-6 lg:px-8 bg-slate-800">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-gray-900">Featured Products</h2>
-          <p className="text-gray-600 mt-2">Discover our latest collection</p>
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-red-600 to-orange-600 rounded-full text-sm font-medium text-white mb-6">
+            <AlertTriangle className="w-4 h-4 mr-2" />
+            Authorized Security Testing Only
+          </div>
+          <h2 className="text-4xl sm:text-5xl font-black text-white mb-4">
+            Professional Security
+            <span className="block bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">
+              Analysis Tools
+            </span>
+          </h2>
+          <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+            Advanced penetration testing and network reconnaissance capabilities for authorized security professionals
+          </p>
         </div>
 
         {/* Category Filter */}
-        <div className="flex flex-wrap justify-center gap-4 mb-12">
+        <div className="flex flex-wrap justify-center gap-4 mb-16">
           {categories.map((category) => (
             <button
               key={category}
               onClick={() => setFilter(category)}
-              className={`px-6 py-2 rounded-full font-medium transition-colors ${
+              className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
                 filter === category
-                  ? 'bg-primary-600 text-white'
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                  ? 'bg-gradient-to-r from-purple-600 to-cyan-600 text-white shadow-lg scale-105'
+                  : 'bg-slate-700 text-gray-300 hover:bg-slate-600 hover:text-white'
               }`}
             >
-              {category.charAt(0).toUpperCase() + category.slice(1)}
+              {category === 'all' ? 'All Tools' : category.split('-').map(word => 
+                word.charAt(0).toUpperCase() + word.slice(1)
+              ).join(' ')}
             </button>
           ))}
         </div>
 
-        {/* Products Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-          {filteredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
+        {/* Features Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {filteredFeatures.map((feature) => {
+            const IconComponent = feature.icon
+            return (
+              <div key={feature.id} className="group relative">
+                <div className="bg-slate-700/50 backdrop-blur-sm rounded-2xl p-8 border border-slate-600/50 hover:border-purple-500/50 transition-all duration-300 hover:shadow-2xl hover:shadow-purple-500/10 h-full">
+                  {/* Icon and Category */}
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="p-3 bg-gradient-to-br from-purple-600 to-cyan-600 rounded-xl group-hover:scale-110 transition-transform duration-300">
+                      <IconComponent className="w-8 h-8 text-white" />
+                    </div>
+                    <span className="text-xs font-medium text-purple-400 bg-purple-500/10 px-3 py-1 rounded-full">
+                      {feature.category}
+                    </span>
+                  </div>
+                  
+                  {/* Content */}
+                  <h3 className="text-xl font-bold text-white mb-3 group-hover:text-purple-300 transition-colors">
+                    {feature.name}
+                  </h3>
+                  
+                  <p className="text-gray-400 mb-6 leading-relaxed">
+                    {feature.description}
+                  </p>
+                  
+                  {/* Capabilities */}
+                  <div className="space-y-2 mb-6">
+                    <h4 className="text-sm font-semibold text-cyan-400">Key Capabilities:</h4>
+                    <ul className="space-y-1">
+                      {feature.capabilities.map((capability, index) => (
+                        <li key={index} className="text-sm text-gray-300 flex items-center">
+                          <div className="w-1.5 h-1.5 bg-cyan-400 rounded-full mr-3"></div>
+                          {capability}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  
+                  {/* Warning */}
+                  <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3 mb-6">
+                    <div className="flex items-start space-x-2">
+                      <AlertTriangle className="w-4 h-4 text-red-400 mt-0.5 flex-shrink-0" />
+                      <p className="text-xs text-red-300 leading-tight">{feature.warning}</p>
+                    </div>
+                  </div>
+                  
+                  {/* Action Button */}
+                  <button className="w-full bg-gradient-to-r from-slate-600 to-slate-700 hover:from-purple-600 hover:to-cyan-600 text-white font-semibold py-3 rounded-xl transition-all duration-300 hover:shadow-lg">
+                    Learn More
+                  </button>
+                </div>
+              </div>
+            )
+          })}
         </div>
 
-        {filteredProducts.length === 0 && (
+        {filteredFeatures.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-gray-500">No products found in this category.</p>
+            <p className="text-gray-400">No tools found in this category.</p>
           </div>
         )}
+        
+        {/* Legal Disclaimer */}
+        <div className="mt-16 p-8 bg-slate-700/30 rounded-2xl border border-red-500/20">
+          <div className="flex items-start space-x-4">
+            <div className="p-3 bg-red-500/20 rounded-lg">
+              <AlertTriangle className="w-8 h-8 text-red-400" />
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-white mb-2">Legal Notice & Ethical Use Policy</h3>
+              <p className="text-gray-300 text-sm leading-relaxed">
+                CyberRecon Suite is designed exclusively for authorized penetration testing, security research, and network administration. 
+                Users must only test networks and systems they own or have explicit written permission to assess. Unauthorized access to 
+                computer systems is illegal and unethical. By using these tools, you agree to comply with all applicable laws and assume 
+                full responsibility for your actions.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   )
