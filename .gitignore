@@ -74,3 +74,12 @@ jspm_packages/
 
 # Optional REPL history
 .node_repl_history
+
+# CyberRanger specific build files
+build_working/
+release/CyberRanger
+CyberRanger_*
+*.run
+
+# Temporary files
+/tmp/
