@@ -33,12 +33,12 @@ export default function Hero() {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <Link href="/pricing" className="group btn-primary inline-flex items-center justify-center space-x-2 bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-purple-500/25">
-                <Shield className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
-                <span>Start Free Trial</span>
+              <Link href="/dashboard" className="group btn-primary inline-flex items-center justify-center space-x-2 bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-purple-500/25">
+                <Terminal className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
+                <span>Launch Live Dashboard</span>
               </Link>
-              <Link href="/features" className="btn-secondary bg-transparent border-2 border-purple-400 text-purple-300 hover:bg-purple-400 hover:text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300">
-                Explore Features
+              <Link href="/pricing" className="btn-secondary bg-transparent border-2 border-purple-400 text-purple-300 hover:bg-purple-400 hover:text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300">
+                View Pricing
               </Link>
             </div>
 
