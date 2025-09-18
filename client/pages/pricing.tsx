@@ -20,75 +20,74 @@ interface PricingTier {
 
 const pricingTiers: PricingTier[] = [
   {
-    id: 'basic',
-    name: 'Security Researcher',
-    description: 'Perfect for individual security researchers and ethical hackers',
-    price: 29,
-    yearlyPrice: 290,
-    stripePriceId: 'price_basic_monthly',
-    stripeYearlyPriceId: 'price_basic_yearly',
+    id: 'free',
+    name: 'Free',
+    description: 'Get started with basic security tools - no credit card required',
+    price: 0,
+    yearlyPrice: 0,
+    stripePriceId: '',
+    stripeYearlyPriceId: '',
     icon: Shield,
     features: [
-      'Wi-Fi Network Scanner',
-      'Basic Bluetooth Discovery',
-      'Network Topology Mapping',
-      'Basic Vulnerability Scanning',
-      'Community Support',
-      'Documentation Access',
+      'Basic Wi-Fi Network Scanner',
+      'Simple Network Discovery',
+      'Community Documentation',
       'Legal Compliance Guidelines'
     ],
     limitations: [
-      'Limited to 10 scans per day',
-      'Basic reporting features',
-      'Community support only'
+      'Limited to 3 scans per day',
+      'Basic reporting only',
+      'Community support only',
+      'No API access',
+      'No advanced features'
     ]
   },
   {
-    id: 'professional',
-    name: 'Security Professional',
-    description: 'Comprehensive tools for security professionals and consultants',
-    price: 99,
-    yearlyPrice: 990,
-    stripePriceId: 'price_professional_monthly',
-    stripeYearlyPriceId: 'price_professional_yearly',
+    id: 'indy',
+    name: 'Indy',
+    description: 'Perfect for independent security researchers and ethical hackers',
+    price: 29,
+    yearlyPrice: 290,
+    stripePriceId: 'price_indy_monthly',
+    stripeYearlyPriceId: 'price_indy_yearly',
     icon: Zap,
     popular: true,
     features: [
-      'All Basic features',
+      'All Free features',
+      'Advanced Wi-Fi Network Scanner',
+      'Bluetooth Discovery',
+      'Network Topology Mapping',
+      'Basic Vulnerability Scanning',
+      'Export Reports (PDF)',
+      'Email Support',
+      'API Access (Limited)'
+    ],
+    limitations: [
+      'Limited to 50 scans per day',
+      'Email support only',
+      'No team features'
+    ]
+  },
+  {
+    id: 'pro',
+    name: 'Pro',
+    description: 'Comprehensive tools for security professionals and consultants',
+    price: 99,
+    yearlyPrice: 990,
+    stripePriceId: 'price_pro_monthly',
+    stripeYearlyPriceId: 'price_pro_yearly',
+    icon: Crown,
+    features: [
+      'All Indy features',
+      'Unlimited Scans',
       'Advanced Bluetooth Reconnaissance',
       'Deep Packet Analysis',
       'Advanced Vulnerability Assessment',
       'Custom Report Generation',
-      'API Access',
-      'Priority Email Support',
+      'Full API Access',
+      'Priority Support',
       'Training Resources',
       'Compliance Templates'
-    ],
-    limitations: [
-      'Limited to 100 scans per day',
-      'Email support only'
-    ]
-  },
-  {
-    id: 'enterprise',
-    name: 'Enterprise Security',
-    description: 'Full-featured suite for security teams and organizations',
-    price: 299,
-    yearlyPrice: 2990,
-    stripePriceId: 'price_enterprise_monthly',
-    stripeYearlyPriceId: 'price_enterprise_yearly',
-    icon: Crown,
-    features: [
-      'All Professional features',
-      'Unlimited Scans',
-      'Multi-user Team Management',
-      'Advanced Analytics Dashboard',
-      'Custom Integration Support',
-      'White-label Reporting',
-      'Dedicated Account Manager',
-      '24/7 Phone & Email Support',
-      'On-premise Deployment Option',
-      'Custom Training Programs'
     ],
     limitations: []
   }
@@ -102,6 +101,14 @@ export default function Pricing() {
     setLoading(tier.id)
     
     try {
+      // Handle free tier - no payment required
+      if (tier.id === 'free') {
+        // Redirect to registration/login with free tier selection
+        window.location.href = '/auth/register?tier=free'
+        return
+      }
+
+      // For paid tiers, proceed with Stripe checkout
       const priceId = isYearly ? tier.stripeYearlyPriceId : tier.stripePriceId
       
       const response = await fetch('/api/create-subscription', {
@@ -111,6 +118,7 @@ export default function Pricing() {
         },
         body: JSON.stringify({
           priceId,
+          tier: tier.id,
           successUrl: window.location.origin + '/subscription-success',
           cancelUrl: window.location.origin + '/pricing',
         }),
@@ -261,10 +269,17 @@ export default function Pricing() {
                       className={`w-full py-4 px-6 rounded-xl font-semibold text-lg transition-all duration-300 ${
                         tier.popular
                           ? 'bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 text-white shadow-lg hover:shadow-purple-500/25'
-                          : 'bg-slate-700 hover:bg-slate-600 text-white'
+                          : tier.id === 'free' 
+                            ? 'bg-green-600 hover:bg-green-700 text-white'
+                            : 'bg-slate-700 hover:bg-slate-600 text-white'
                       } ${loading === tier.id ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105'}`}
                     >
-                      {loading === tier.id ? 'Processing...' : 'Start Subscription'}
+                      {loading === tier.id 
+                        ? 'Processing...' 
+                        : tier.id === 'free' 
+                          ? 'Get Started Free' 
+                          : 'Start Subscription'
+                      }
                     </button>
                   </div>
                 )

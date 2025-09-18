@@ -11,7 +11,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const { priceId, successUrl, cancelUrl } = req.body
+    const { priceId, tier, successUrl, cancelUrl } = req.body
 
     if (!priceId) {
       return res.status(400).json({ error: 'Price ID is required' })
@@ -32,12 +32,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       automatic_tax: { enabled: true },
       customer_creation: 'always',
       metadata: {
-        source: 'cyberrecon-suite'
+        source: 'cyberrecon-suite',
+        tier: tier || 'unknown'
       },
       subscription_data: {
         metadata: {
           source: 'cyberrecon-suite',
-          plan: priceId
+          plan: priceId,
+          tier: tier || 'unknown'
         }
       }
     })
