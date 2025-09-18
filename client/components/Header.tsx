@@ -28,6 +28,9 @@ export default function Header() {
             <Link href="/" className="text-gray-300 hover:text-white font-medium transition-colors hover:bg-purple-600/20 px-3 py-2 rounded-lg">
               Home
             </Link>
+            <Link href="/dashboard" className="text-gray-300 hover:text-white font-medium transition-colors hover:bg-purple-600/20 px-3 py-2 rounded-lg">
+              🛡️ Dashboard
+            </Link>
             <Link href="/features" className="text-gray-300 hover:text-white font-medium transition-colors hover:bg-purple-600/20 px-3 py-2 rounded-lg">
               Features
             </Link>
@@ -67,6 +70,9 @@ export default function Header() {
           <div className="md:hidden py-4 space-y-4 border-t border-purple-500/20">
             <Link href="/" className="block text-gray-300 hover:text-white font-medium py-2">
               Home
+            </Link>
+            <Link href="/dashboard" className="block text-gray-300 hover:text-white font-medium py-2">
+              🛡️ Dashboard
             </Link>
             <Link href="/features" className="block text-gray-300 hover:text-white font-medium py-2">
               Features

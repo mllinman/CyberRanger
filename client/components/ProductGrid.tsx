@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Wifi, Bluetooth, Network, Shield, Terminal, Zap, Eye, Lock, AlertTriangle } from 'lucide-react'
+import Link from 'next/link'
 
 interface Feature {
   id: string
@@ -97,23 +98,37 @@ export default function FeaturesGrid() {
           </p>
         </div>
 
-        {/* Category Filter */}
-        <div className="flex flex-wrap justify-center gap-4 mb-16">
-          {categories.map((category) => (
+        {/* Filter Buttons */}
+        <div className="flex flex-wrap justify-center gap-3 mb-12">
+          {categories.map(category => (
             <button
               key={category}
               onClick={() => setFilter(category)}
-              className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
-                filter === category
-                  ? 'bg-gradient-to-r from-purple-600 to-cyan-600 text-white shadow-lg scale-105'
-                  : 'bg-slate-700 text-gray-300 hover:bg-slate-600 hover:text-white'
+              className={`px-6 py-3 rounded-full font-semibold text-sm transition-all duration-300 ${
+                filter === category 
+                  ? 'bg-gradient-to-r from-purple-600 to-cyan-600 text-white shadow-lg shadow-purple-500/25' 
+                  : 'bg-slate-700/50 text-gray-300 hover:bg-slate-600/50 hover:text-white'
               }`}
             >
-              {category === 'all' ? 'All Tools' : category.split('-').map(word => 
-                word.charAt(0).toUpperCase() + word.slice(1)
-              ).join(' ')}
+              {category === 'all' ? 'All Tools' : category.replace(/-/g, ' ')}
             </button>
           ))}
+        </div>
+
+        {/* Live Dashboard Promotion */}
+        <div className="mb-12 p-8 bg-gradient-to-r from-purple-600/20 to-cyan-600/20 rounded-2xl border border-purple-500/30">
+          <div className="text-center">
+            <h3 className="text-2xl font-bold text-white mb-4">
+              🚀 New: Real-Time Security Dashboard
+            </h3>
+            <p className="text-gray-300 mb-6">
+              Experience our professional-grade tools with live network scanning, real-time monitoring, and instant security alerts.
+            </p>
+            <Link href="/dashboard" className="inline-flex items-center space-x-2 bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-purple-500/25">
+              <Terminal className="w-5 h-5" />
+              <span>Launch Live Dashboard</span>
+            </Link>
+          </div>
         </div>
 
         {/* Features Grid */}
@@ -164,9 +179,11 @@ export default function FeaturesGrid() {
                   </div>
                   
                   {/* Action Button */}
-                  <button className="w-full bg-gradient-to-r from-slate-600 to-slate-700 hover:from-purple-600 hover:to-cyan-600 text-white font-semibold py-3 rounded-xl transition-all duration-300 hover:shadow-lg">
-                    Learn More
-                  </button>
+                  <Link href="/dashboard" className="block w-full">
+                    <button className="w-full bg-gradient-to-r from-slate-600 to-slate-700 hover:from-purple-600 hover:to-cyan-600 text-white font-semibold py-3 rounded-xl transition-all duration-300 hover:shadow-lg">
+                      🚀 Use Live Tool
+                    </button>
+                  </Link>
                 </div>
               </div>
             )
