@@ -42,7 +42,9 @@ router.post('/register', async (req, res) => {
       password: hashedPassword,
       firstName,
       lastName,
-      role: 'customer'
+      role: 'customer',
+      subscriptionTier: 'free',
+      subscriptionStatus: 'active'
     })
 
     await user.save()
@@ -279,6 +281,95 @@ router.put('/change-password', authenticateToken, async (req: AuthRequest, res) 
     console.error('Password change error:', error)
     res.status(500).json({
       error: 'Failed to change password',
+      message: 'Internal server error'
+    })
+  }
+})
+
+// OAuth login/register
+router.post('/oauth-login', async (req, res) => {
+  try {
+    const { provider, providerId, email, name, avatar } = req.body
+
+    if (!provider || !providerId || !email) {
+      return res.status(400).json({
+        error: 'Missing OAuth data',
+        message: 'Provider, provider ID, and email are required'
+      })
+    }
+
+    // Parse name
+    const [firstName = '', lastName = ''] = (name || '').split(' ')
+
+    // Check if user exists by provider ID
+    let user = await User.findOne({
+      $or: [
+        { googleId: provider === 'google' ? providerId : undefined },
+        { githubId: provider === 'github' ? providerId : undefined },
+        { email: email.toLowerCase() }
+      ]
+    })
+
+    if (user) {
+      // Update OAuth ID if not set
+      if (provider === 'google' && !user.googleId) {
+        user.googleId = providerId
+      } else if (provider === 'github' && !user.githubId) {
+        user.githubId = providerId
+      }
+      
+      // Update avatar and last login
+      if (avatar) user.avatar = avatar
+      user.lastLogin = new Date()
+      await user.save()
+    } else {
+      // Create new user
+      user = new User({
+        email: email.toLowerCase(),
+        firstName: firstName || 'User',
+        lastName: lastName || '',
+        role: 'customer',
+        subscriptionTier: 'free',
+        subscriptionStatus: 'active',
+        avatar,
+        googleId: provider === 'google' ? providerId : undefined,
+        githubId: provider === 'github' ? providerId : undefined,
+        lastLogin: new Date()
+      })
+      await user.save()
+    }
+
+    // Generate JWT token
+    const token = jwt.sign(
+      { 
+        userId: user._id, 
+        email: user.email,
+        role: user.role,
+        subscriptionTier: user.subscriptionTier
+      },
+      process.env.JWT_SECRET || 'your-secret-key',
+      { expiresIn: '7d' }
+    )
+
+    res.json({
+      success: true,
+      message: 'OAuth login successful',
+      user: {
+        id: user._id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        role: user.role,
+        subscriptionTier: user.subscriptionTier,
+        subscriptionStatus: user.subscriptionStatus,
+        avatar: user.avatar
+      },
+      token
+    })
+  } catch (error) {
+    console.error('OAuth login error:', error)
+    res.status(500).json({
+      error: 'OAuth login failed',
       message: 'Internal server error'
     })
   }

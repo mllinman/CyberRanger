@@ -8,6 +8,18 @@ export interface IUser extends Document {
   phone?: string
   role: 'customer' | 'admin'
   active: boolean
+  // Subscription fields
+  subscriptionTier: 'free' | 'indy' | 'pro'
+  subscriptionStatus: 'active' | 'inactive' | 'cancelled' | 'past_due'
+  stripeCustomerId?: string
+  stripeSubscriptionId?: string
+  subscriptionStartDate?: Date
+  subscriptionEndDate?: Date
+  // OAuth fields
+  googleId?: string
+  githubId?: string
+  avatar?: string
+  // Existing fields
   address?: {
     street: string
     city: string
@@ -17,7 +29,6 @@ export interface IUser extends Document {
   }
   dateOfBirth?: Date
   lastLogin?: Date
-  stripeCustomerId?: string
   createdAt: Date
   updatedAt: Date
 }
@@ -33,7 +44,10 @@ const UserSchema = new Schema<IUser>({
   },
   password: {
     type: String,
-    required: true,
+    required: function() {
+      // Password is required only if no OAuth IDs are present
+      return !this.googleId && !this.githubId
+    },
     minlength: 6,
     select: false // Don't include password in queries by default
   },
@@ -63,6 +77,49 @@ const UserSchema = new Schema<IUser>({
     type: Boolean,
     default: true
   },
+  // Subscription fields
+  subscriptionTier: {
+    type: String,
+    enum: ['free', 'indy', 'pro'],
+    default: 'free'
+  },
+  subscriptionStatus: {
+    type: String,
+    enum: ['active', 'inactive', 'cancelled', 'past_due'],
+    default: 'active'
+  },
+  stripeCustomerId: {
+    type: String,
+    unique: true,
+    sparse: true
+  },
+  stripeSubscriptionId: {
+    type: String,
+    unique: true,
+    sparse: true
+  },
+  subscriptionStartDate: {
+    type: Date,
+    default: Date.now
+  },
+  subscriptionEndDate: {
+    type: Date
+  },
+  // OAuth fields
+  googleId: {
+    type: String,
+    unique: true,
+    sparse: true
+  },
+  githubId: {
+    type: String,
+    unique: true,
+    sparse: true
+  },
+  avatar: {
+    type: String
+  },
+  // Existing fields
   address: {
     street: String,
     city: String,
@@ -75,11 +132,6 @@ const UserSchema = new Schema<IUser>({
   },
   lastLogin: {
     type: Date
-  },
-  stripeCustomerId: {
-    type: String,
-    unique: true,
-    sparse: true
   }
 }, {
   timestamps: true,
