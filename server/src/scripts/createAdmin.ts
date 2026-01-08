@@ -20,7 +20,7 @@ const createAdminUser = async () => {
     const adminPassword = process.env.ADMIN_PASSWORD || 'Detroit1977!!'
 
     // Check if admin already exists
-    const existingAdmin = await User.findOne({ email: adminEmail })
+    const existingAdmin = await User.findOne({ email: adminEmail }).select('+password')
     if (existingAdmin) {
       console.log('⚠️  Admin user already exists')
       console.log(`Email: ${existingAdmin.email}`)
