@@ -10,6 +10,12 @@ interface AuthRequest extends express.Request {
 
 const router = express.Router()
 
+// Admin configuration - centralized to avoid duplication
+const getAdminConfig = () => ({
+  email: process.env.ADMIN_EMAIL || 'admin@cyberstore.local',
+  password: process.env.ADMIN_PASSWORD || 'Detroit1977!!'
+})
+
 // Register new user
 router.post('/register', async (req, res) => {
   try {
@@ -93,20 +99,6 @@ router.post('/login', async (req, res) => {
       })
     }
 
-    // Verify admin credentials if attempting to login as admin
-    const adminEmail = process.env.ADMIN_EMAIL || 'admin@cyberstore.local'
-    const adminPassword = process.env.ADMIN_PASSWORD || 'Detroit1977!!'
-    
-    if (email.toLowerCase() === adminEmail.toLowerCase()) {
-      // For admin login, verify against configured admin credentials
-      if (password !== adminPassword) {
-        return res.status(401).json({
-          error: 'Invalid credentials',
-          message: 'Email or password is incorrect'
-        })
-      }
-    }
-
     // Find user by email
     const user = await User.findOne({ email: email.toLowerCase() }).select('+password')
     if (!user) {
@@ -133,12 +125,24 @@ router.post('/login', async (req, res) => {
       })
     }
 
-    // Additional check: Ensure admin users have admin role
-    if (email.toLowerCase() === adminEmail.toLowerCase() && user.role !== 'admin') {
-      return res.status(401).json({
-        error: 'Invalid credentials',
-        message: 'Account does not have admin privileges'
-      })
+    // Additional verification for admin users
+    const adminConfig = getAdminConfig()
+    if (email.toLowerCase() === adminConfig.email.toLowerCase()) {
+      // Ensure admin users have admin role
+      if (user.role !== 'admin') {
+        return res.status(401).json({
+          error: 'Invalid credentials',
+          message: 'Email or password is incorrect'
+        })
+      }
+      
+      // Verify against configured admin password
+      if (password !== adminConfig.password) {
+        return res.status(401).json({
+          error: 'Invalid credentials',
+          message: 'Email or password is incorrect'
+        })
+      }
     }
 
     // Update last login
@@ -280,8 +284,8 @@ router.put('/change-password', authenticateToken, async (req: AuthRequest, res) 
     }
 
     // Prevent admin user from changing password through API
-    const adminEmail = process.env.ADMIN_EMAIL || 'admin@cyberstore.local'
-    if (user.email.toLowerCase() === adminEmail.toLowerCase()) {
+    const adminConfig = getAdminConfig()
+    if (user.email.toLowerCase() === adminConfig.email.toLowerCase()) {
       return res.status(403).json({
         error: 'Operation not permitted',
         message: 'Admin password cannot be changed through this endpoint. Please update the ADMIN_PASSWORD environment variable and run the create-admin script.'
