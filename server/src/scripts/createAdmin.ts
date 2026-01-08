@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
-import bcrypt from 'bcryptjs'
-import dotenv from 'dotenv'
+import * as bcrypt from 'bcryptjs'
+import * as dotenv from 'dotenv'
 import User from '../models/User'
 
 dotenv.config()
