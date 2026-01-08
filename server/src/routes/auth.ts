@@ -116,7 +116,7 @@ router.post('/login', async (req, res) => {
       })
     }
 
-    // Verify password
+    // Verify password using bcrypt
     const isValidPassword = await bcrypt.compare(password, user.password)
     if (!isValidPassword) {
       return res.status(401).json({
@@ -125,19 +125,10 @@ router.post('/login', async (req, res) => {
       })
     }
 
-    // Additional verification for admin users
+    // Additional verification for admin users: ensure they have admin role
     const adminConfig = getAdminConfig()
     if (email.toLowerCase() === adminConfig.email.toLowerCase()) {
-      // Ensure admin users have admin role
       if (user.role !== 'admin') {
-        return res.status(401).json({
-          error: 'Invalid credentials',
-          message: 'Email or password is incorrect'
-        })
-      }
-      
-      // Verify against configured admin password
-      if (password !== adminConfig.password) {
         return res.status(401).json({
           error: 'Invalid credentials',
           message: 'Email or password is incorrect'
