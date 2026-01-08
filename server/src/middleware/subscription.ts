@@ -1,8 +1,8 @@
-import { NextApiRequest, NextApiResponse } from 'next'
+import { Request, Response, NextFunction } from 'express'
 import jwt from 'jsonwebtoken'
 import User from '../models/User'
 
-export interface AuthRequest extends NextApiRequest {
+export interface AuthRequest extends Request {
   user?: {
     userId: string
     email: string
@@ -12,7 +12,7 @@ export interface AuthRequest extends NextApiRequest {
   }
 }
 
-export const authenticateToken = async (req: AuthRequest, res: NextApiResponse, next: Function) => {
+export const authenticateToken = async (req: AuthRequest, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization
   const token = authHeader && authHeader.split(' ')[1]
 
@@ -54,7 +54,7 @@ export const authenticateToken = async (req: AuthRequest, res: NextApiResponse, 
 export const requireSubscriptionTier = (minTier: 'free' | 'indy' | 'pro') => {
   const tierLevels = { free: 0, indy: 1, pro: 2 }
   
-  return (req: AuthRequest, res: NextApiResponse, next: Function) => {
+  return (req: AuthRequest, res: Response, next: NextFunction) => {
     if (!req.user) {
       return res.status(401).json({ 
         error: 'Authentication required',
@@ -88,7 +88,7 @@ export const requireSubscriptionTier = (minTier: 'free' | 'indy' | 'pro') => {
 }
 
 // Check daily scan limits
-export const checkScanLimits = async (req: AuthRequest, res: NextApiResponse, next: Function) => {
+export const checkScanLimits = async (req: AuthRequest, res: Response, next: NextFunction) => {
   if (!req.user) {
     return res.status(401).json({ 
       error: 'Authentication required',

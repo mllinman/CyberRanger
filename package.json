@@ -9,12 +9,13 @@
     "server:dev": "cd server && npm run dev",
     "client:build": "cd client && npm run build",
     "server:build": "cd server && npm run build",
-    "build": "npm run client:build && npm run server:build",
+    "build": "npm run server:build",
     "start": "cd server && npm start",
     "install:all": "npm install && cd client && npm install && cd ../server && npm install",
     "test": "npm run client:test && npm run server:test",
     "client:test": "cd client && npm test",
-    "server:test": "cd server && npm test"
+    "server:test": "cd server && npm test",
+    "deploy:railway": "railway up"
   },
   "keywords": [
     "e-commerce",

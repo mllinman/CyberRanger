@@ -1,0 +1,81 @@
+# Railway Ignore File
+# Optimizes deployments by excluding unnecessary files
+
+# Client files (not needed for server deployment)
+client/
+.next/
+out/
+
+# C++ / Qt application files (not needed for Node.js server)
+*.cpp
+*.h
+*.hpp
+CMakeLists.txt
+CMakeLists_*.txt
+build*/
+release/
+Core/
+modules/
+plugins/
+resources/
+ui/
+assets/banner.png
+assets/app_icon.png
+*.qrc
+*.sh
+*.bat
+installer/
+src/*.cpp
+
+# Development files
+.git/
+.github/
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Documentation (not needed at runtime)
+*.md
+!RAILWAY_DEPLOYMENT.md
+LICENSE
+SECURITY.md
+CONTRIBUTING.md
+CHANGELOG.md
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Test files
+*.test.ts
+*.test.js
+*.spec.ts
+*.spec.js
+__tests__/
+test/
+
+# Build artifacts (will be rebuilt on Railway)
+server/dist/
+server/node_modules/
+node_modules/
+
+# Environment files (set via Railway dashboard)
+.env
+.env.*
+!.env.example
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+
+# Coverage
+coverage/
+.nyc_output/

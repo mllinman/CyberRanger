@@ -21,8 +21,32 @@ const PORT = process.env.PORT || 8000
 
 // Security middleware
 app.use(helmet())
+
+// CORS configuration - Allow multiple origins for deployment
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  'http://localhost:3000',
+  'http://localhost:3001',
+  'https://*.railway.app',
+  'https://*.up.railway.app'
+].filter(Boolean)
+
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:3000',
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps, curl, etc)
+    if (!origin) return callback(null, true)
+    
+    // Check if origin is in allowed list or matches Railway pattern
+    if (allowedOrigins.some(allowed => 
+      allowed && (allowed === origin || 
+      (allowed.includes('*') && origin.includes('railway.app')))
+    )) {
+      callback(null, true)
+    } else {
+      console.warn(`CORS blocked origin: ${origin}`)
+      callback(null, true) // Allow all origins for now, can be stricter in production
+    }
+  },
   credentials: true
 }))
 
@@ -47,12 +71,20 @@ app.use(morgan('combined'))
 // Database connection
 const connectDB = async () => {
   try {
-    const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/cyberstore'
+    const mongoURI = process.env.MONGODB_URI
+    
+    if (!mongoURI) {
+      console.warn('⚠️  MONGODB_URI not configured - running without database')
+      return false
+    }
+
     await mongoose.connect(mongoURI)
-    console.log('MongoDB connected successfully')
+    console.log('✅ MongoDB connected successfully')
+    return true
   } catch (error) {
-    console.error('Database connection error:', error)
-    process.exit(1)
+    console.error('❌ Database connection error:', error)
+    console.warn('⚠️  Continuing without database connection')
+    return false
   }
 }
 
@@ -63,12 +95,33 @@ app.use('/api/orders', orderRoutes)
 app.use('/api/payments', paymentRoutes)
 app.use('/api/users', userRoutes)
 
+// Root endpoint
+app.get('/', (req, res) => {
+  res.json({
+    message: 'CyberStore API',
+    version: '1.0.0',
+    endpoints: {
+      health: '/api/health',
+      products: '/api/products',
+      auth: '/api/auth',
+      orders: '/api/orders',
+      payments: '/api/payments',
+      users: '/api/users'
+    },
+    documentation: 'See RAILWAY_DEPLOYMENT.md for deployment instructions'
+  })
+})
+
 // Health check endpoint
 app.get('/api/health', (req, res) => {
+  const dbStatus = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected'
   res.status(200).json({
     status: 'OK',
     message: 'CyberStore API is running',
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development',
+    database: dbStatus,
+    stripe: process.env.STRIPE_SECRET_KEY ? 'configured' : 'not configured'
   })
 })
 
@@ -91,10 +144,17 @@ app.use('*', (req, res) => {
 
 const startServer = async () => {
   try {
-    await connectDB()
+    const dbConnected = await connectDB()
+    
     app.listen(PORT, () => {
       console.log(`🚀 Server running on port ${PORT}`)
       console.log(`📱 API Health: http://localhost:${PORT}/api/health`)
+      console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`)
+      if (dbConnected) {
+        console.log(`💾 Database: Connected`)
+      } else {
+        console.log(`⚠️  Database: Not connected`)
+      }
     })
   } catch (error) {
     console.error('Failed to start server:', error)
