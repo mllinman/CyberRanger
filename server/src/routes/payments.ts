@@ -7,13 +7,25 @@ interface AuthRequest extends express.Request {
 }
 
 const router = express.Router()
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2023-10-16'
-})
+
+// Initialize Stripe only if the secret key is available
+let stripe: Stripe | null = null
+if (process.env.STRIPE_SECRET_KEY) {
+  stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+    apiVersion: '2023-10-16'
+  })
+}
 
 // Create payment intent
 router.post('/create-payment-intent', async (req, res) => {
   try {
+    if (!stripe) {
+      return res.status(503).json({
+        error: 'Payment service unavailable',
+        message: 'Stripe is not configured'
+      })
+    }
+
     const { amount, currency = 'usd' } = req.body
 
     if (!amount || amount < 50) { // Minimum charge amount
@@ -50,6 +62,13 @@ router.post('/create-payment-intent', async (req, res) => {
 // Confirm payment
 router.post('/confirm-payment', authenticateToken, async (req: AuthRequest, res) => {
   try {
+    if (!stripe) {
+      return res.status(503).json({
+        error: 'Payment service unavailable',
+        message: 'Stripe is not configured'
+      })
+    }
+
     const { paymentIntentId } = req.body
 
     const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId)
@@ -78,8 +97,16 @@ router.post('/confirm-payment', authenticateToken, async (req: AuthRequest, res)
 
 // Webhook endpoint for Stripe events
 router.post('/webhook', express.raw({ type: 'application/json' }), (req, res) => {
+  if (!stripe) {
+    return res.status(503).json({ error: 'Payment service unavailable' })
+  }
+
   const sig = req.headers['stripe-signature'] as string
-  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET
+
+  if (!webhookSecret) {
+    return res.status(500).json({ error: 'Webhook secret not configured' })
+  }
 
   try {
     const event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret)
@@ -111,6 +138,12 @@ router.post('/webhook', express.raw({ type: 'application/json' }), (req, res) =>
 // Get payment methods for a customer
 router.get('/payment-methods', authenticateToken, async (req: AuthRequest, res) => {
   try {
+    if (!stripe) {
+      return res.status(503).json({
+        error: 'Payment service unavailable'
+      })
+    }
+
     const customerId = req.body.customerId
 
     if (!customerId) {
@@ -138,6 +171,12 @@ router.get('/payment-methods', authenticateToken, async (req: AuthRequest, res) 
 // Create a refund
 router.post('/refund', authenticateToken, async (req: AuthRequest, res) => {
   try {
+    if (!stripe) {
+      return res.status(503).json({
+        error: 'Payment service unavailable'
+      })
+    }
+
     const { paymentIntentId, amount, reason = 'requested_by_customer' } = req.body
 
     const refund = await stripe.refunds.create({
