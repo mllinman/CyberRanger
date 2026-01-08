@@ -279,6 +279,15 @@ router.put('/change-password', authenticateToken, async (req: AuthRequest, res) 
       })
     }
 
+    // Prevent admin user from changing password through API
+    const adminEmail = process.env.ADMIN_EMAIL || 'admin@cyberstore.local'
+    if (user.email.toLowerCase() === adminEmail.toLowerCase()) {
+      return res.status(403).json({
+        error: 'Operation not permitted',
+        message: 'Admin password cannot be changed through this endpoint. Please update the ADMIN_PASSWORD environment variable and run the create-admin script.'
+      })
+    }
+
     // Verify current password
     const isValidPassword = await bcrypt.compare(currentPassword, user.password)
     if (!isValidPassword) {
