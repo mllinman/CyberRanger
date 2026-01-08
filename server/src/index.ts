@@ -6,6 +6,8 @@ import morgan from 'morgan'
 import dotenv from 'dotenv'
 import rateLimit from 'express-rate-limit'
 import mongoose from 'mongoose'
+import next from 'next'
+import path from 'path'
 
 // Import routes
 import productRoutes from './routes/products'
@@ -15,6 +17,10 @@ import paymentRoutes from './routes/payments'
 import userRoutes from './routes/users'
 
 dotenv.config()
+
+const dev = process.env.NODE_ENV !== 'production'
+const nextApp = next({ dev, dir: path.join(__dirname, '../../client') })
+const handle = nextApp.getRequestHandler()
 
 const app = express()
 const PORT = process.env.PORT || 8000
@@ -35,11 +41,11 @@ app.use(cors({
   origin: (origin, callback) => {
     // Allow requests with no origin (like mobile apps, curl, etc)
     if (!origin) return callback(null, true)
-    
+
     // Check if origin is in allowed list or matches Railway pattern
-    if (allowedOrigins.some(allowed => 
-      allowed && (allowed === origin || 
-      (allowed.includes('*') && origin.includes('railway.app')))
+    if (allowedOrigins.some(allowed =>
+      allowed && (allowed === origin ||
+        (allowed.includes('*') && origin.includes('railway.app')))
     )) {
       callback(null, true)
     } else {
@@ -72,7 +78,7 @@ app.use(morgan('combined'))
 const connectDB = async () => {
   try {
     const mongoURI = process.env.MONGODB_URI
-    
+
     if (!mongoURI) {
       console.warn('⚠️  MONGODB_URI not configured - running without database')
       return false
@@ -95,22 +101,8 @@ app.use('/api/orders', orderRoutes)
 app.use('/api/payments', paymentRoutes)
 app.use('/api/users', userRoutes)
 
-// Root endpoint
-app.get('/', (req, res) => {
-  res.json({
-    message: 'CyberStore API',
-    version: '1.0.0',
-    endpoints: {
-      health: '/api/health',
-      products: '/api/products',
-      auth: '/api/auth',
-      orders: '/api/orders',
-      payments: '/api/payments',
-      users: '/api/users'
-    },
-    documentation: 'See RAILWAY_DEPLOYMENT.md for deployment instructions'
-  })
-})
+// Root endpoint handled by Next.js
+// app.get('/', (req, res) => { ... })
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
@@ -134,18 +126,18 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
   })
 })
 
-// 404 handler
-app.use('*', (req, res) => {
-  res.status(404).json({
-    error: 'Route not found',
-    message: `The requested resource ${req.originalUrl} was not found on this server.`
-  })
+// Next.js request handler for all non-API routes
+app.all('*', (req, res) => {
+  return handle(req, res)
 })
 
 const startServer = async () => {
   try {
     const dbConnected = await connectDB()
-    
+
+    await nextApp.prepare()
+    console.log('✅ Next.js app prepared')
+
     app.listen(PORT, () => {
       console.log(`🚀 Server running on port ${PORT}`)
       console.log(`📱 API Health: http://localhost:${PORT}/api/health`)
