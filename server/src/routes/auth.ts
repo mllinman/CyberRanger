@@ -10,6 +10,12 @@ interface AuthRequest extends express.Request {
 
 const router = express.Router()
 
+// Admin configuration - centralized to avoid duplication
+const getAdminConfig = () => ({
+  email: process.env.ADMIN_EMAIL || 'admin@cyberstore.local',
+  password: process.env.ADMIN_PASSWORD || 'Detroit1977!!'
+})
+
 // Register new user
 router.post('/register', async (req, res) => {
   try {
@@ -110,13 +116,24 @@ router.post('/login', async (req, res) => {
       })
     }
 
-    // Verify password
+    // Verify password using bcrypt
     const isValidPassword = await bcrypt.compare(password, user.password)
     if (!isValidPassword) {
       return res.status(401).json({
         error: 'Invalid credentials',
         message: 'Email or password is incorrect'
       })
+    }
+
+    // Additional verification for admin users: ensure they have admin role
+    const adminConfig = getAdminConfig()
+    if (email.toLowerCase() === adminConfig.email.toLowerCase()) {
+      if (user.role !== 'admin') {
+        return res.status(401).json({
+          error: 'Invalid credentials',
+          message: 'Email or password is incorrect'
+        })
+      }
     }
 
     // Update last login
@@ -254,6 +271,15 @@ router.put('/change-password', authenticateToken, async (req: AuthRequest, res) 
       return res.status(404).json({
         error: 'User not found',
         message: 'User not found'
+      })
+    }
+
+    // Prevent admin user from changing password through API
+    const adminConfig = getAdminConfig()
+    if (user.email.toLowerCase() === adminConfig.email.toLowerCase()) {
+      return res.status(403).json({
+        error: 'Operation not permitted',
+        message: 'Admin password cannot be changed through this endpoint. Please update the ADMIN_PASSWORD environment variable and run the create-admin script.'
       })
     }
 
