@@ -97,6 +97,7 @@ export default NextAuth({
 
           if (response.ok) {
             const { user: dbUser, token: accessToken } = await response.json()
+            // Override token fields with database user info
             token.userId = dbUser.id
             token.email = dbUser.email
             token.name = `${dbUser.firstName} ${dbUser.lastName}`
