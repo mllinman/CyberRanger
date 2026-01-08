@@ -4,8 +4,8 @@ This document describes how to create and use the admin user account for the Cyb
 
 ## Admin Credentials
 
-**Email:** `admin`  
-**Password:** `Detroit1977!!`  
+**Email:** `admin@cyberstore.local` (configurable via `ADMIN_EMAIL` environment variable)  
+**Password:** `Detroit1977!!` (configurable via `ADMIN_PASSWORD` environment variable)  
 **Role:** `admin`  
 **Privileges:** Full access to all application features
 
@@ -18,10 +18,29 @@ cd server
 npm run create-admin
 ```
 
+### Using Custom Credentials
+
+You can specify custom admin credentials using environment variables:
+
+```bash
+# Set custom credentials
+export ADMIN_EMAIL="your-admin@example.com"
+export ADMIN_PASSWORD="YourSecurePassword123!"
+
+# Create admin user
+npm run create-admin
+```
+
+Or inline:
+
+```bash
+ADMIN_EMAIL="your-admin@example.com" ADMIN_PASSWORD="YourSecurePassword123!" npm run create-admin
+```
+
 This script will:
 - Connect to the MongoDB database
 - Create an admin user with the specified credentials (if it doesn't exist)
-- Update the admin user credentials (if it already exists)
+- Update the admin user credentials and privileges (if it already exists)
 - Grant full privileges (admin role, pro subscription tier)
 
 ## Using Admin Credentials
@@ -32,7 +51,7 @@ This script will:
 curl -X POST http://localhost:8000/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{
-    "email": "admin",
+    "email": "admin@cyberstore.local",
     "password": "Detroit1977!!"
   }'
 ```
@@ -40,7 +59,7 @@ curl -X POST http://localhost:8000/api/auth/login \
 ### Login via Web Interface
 
 1. Navigate to the login page
-2. Enter email: `admin`
+2. Enter email: `admin@cyberstore.local`
 3. Enter password: `Detroit1977!!`
 4. Click "Login"
 
@@ -57,10 +76,22 @@ The admin user has the following privileges:
 
 ⚠️ **Important Security Considerations:**
 
-1. **Change Default Password:** In production environments, change the default password immediately after first login.
-2. **Secure Storage:** Never commit actual admin passwords to version control.
-3. **Use Environment Variables:** Consider using environment variables for admin credentials in production.
-4. **Strong Password Policy:** Ensure the password meets your organization's security requirements.
+1. **Change Default Password:** In production environments, always use custom credentials via environment variables.
+2. **Use Environment Variables:** Set `ADMIN_EMAIL` and `ADMIN_PASSWORD` environment variables before running the script in production.
+3. **Secure Storage:** Never commit actual admin passwords to version control.
+4. **Strong Password Policy:** Ensure the password meets your organization's security requirements (minimum 8 characters, mix of upper/lower case, numbers, and special characters).
+5. **Email Format:** Use a valid email address format for the admin user.
+
+### Production Example
+
+```bash
+# In your production environment or .env file
+ADMIN_EMAIL=admin@yourcompany.com
+ADMIN_PASSWORD=YourVerySecurePassword123!@#
+
+# Then run
+npm run create-admin
+```
 
 ## Troubleshooting
 
@@ -74,6 +105,10 @@ Ensure that:
 1. MongoDB is running
 2. The `MONGODB_URI` environment variable is correctly set in the `.env` file
 3. Network connectivity to the database is available
+
+### Email Validation Error
+
+If you see an email validation error, ensure that the admin email follows the format: `username@domain.tld`. The default `admin@cyberstore.local` is a valid format.
 
 ### Permission Issues
 

@@ -5,6 +5,9 @@ import User from '../models/User'
 
 dotenv.config()
 
+// Constants
+const SALT_ROUNDS = 12
+
 const createAdminUser = async () => {
   try {
     // Connect to database
@@ -12,9 +15,9 @@ const createAdminUser = async () => {
     await mongoose.connect(mongoURI)
     console.log('✅ Connected to MongoDB')
 
-    // Admin credentials
-    const adminEmail = 'admin'
-    const adminPassword = 'Detroit1977!!'
+    // Admin credentials - use environment variables or defaults
+    const adminEmail = process.env.ADMIN_EMAIL || 'admin@cyberstore.local'
+    const adminPassword = process.env.ADMIN_PASSWORD || 'Detroit1977!!'
 
     // Check if admin already exists
     const existingAdmin = await User.findOne({ email: adminEmail })
@@ -23,18 +26,18 @@ const createAdminUser = async () => {
       console.log(`Email: ${existingAdmin.email}`)
       console.log(`Role: ${existingAdmin.role}`)
       
-      // Update password if different
-      const saltRounds = 12
-      const hashedPassword = await bcrypt.hash(adminPassword, saltRounds)
+      // Update role and status to ensure admin privileges
+      const hashedPassword = await bcrypt.hash(adminPassword, SALT_ROUNDS)
       existingAdmin.password = hashedPassword
       existingAdmin.role = 'admin'
       existingAdmin.active = true
+      existingAdmin.subscriptionTier = 'pro'
+      existingAdmin.subscriptionStatus = 'active'
       await existingAdmin.save()
-      console.log('✅ Admin user updated with new password')
+      console.log('✅ Admin user updated with admin privileges')
     } else {
       // Hash password
-      const saltRounds = 12
-      const hashedPassword = await bcrypt.hash(adminPassword, saltRounds)
+      const hashedPassword = await bcrypt.hash(adminPassword, SALT_ROUNDS)
 
       // Create admin user
       const adminUser = new User({
@@ -52,12 +55,12 @@ const createAdminUser = async () => {
       console.log('✅ Admin user created successfully')
     }
 
-    console.log('\n=== Admin Credentials ===')
-    console.log('Email: admin')
-    console.log('Password: Detroit1977!!')
+    console.log('\n=== Admin User Created ===')
+    console.log(`Email: ${adminEmail}`)
+    console.log('Password: [CONFIGURED]')
     console.log('Role: admin')
     console.log('Full privileges: enabled')
-    console.log('========================\n')
+    console.log('=========================\n')
 
     // Disconnect from database
     await mongoose.disconnect()
