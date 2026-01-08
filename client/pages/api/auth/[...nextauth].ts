@@ -68,6 +68,8 @@ export default NextAuth({
     async jwt({ token, user, account }) {
       if (user) {
         token.userId = user.id
+        token.email = user.email
+        token.name = user.name
         token.role = user.role
         token.subscriptionTier = user.subscriptionTier
         token.subscriptionStatus = user.subscriptionStatus
@@ -95,13 +97,15 @@ export default NextAuth({
 
           if (response.ok) {
             const { user: dbUser, token: accessToken } = await response.json()
+            token.userId = dbUser.id
+            token.email = dbUser.email
+            token.name = `${dbUser.firstName} ${dbUser.lastName}`
             token.role = dbUser.role
             token.subscriptionTier = dbUser.subscriptionTier
             token.subscriptionStatus = dbUser.subscriptionStatus
             token.firstName = dbUser.firstName
             token.lastName = dbUser.lastName
             token.accessToken = accessToken
-            token.userId = dbUser.id
           }
         } catch (error) {
           console.error('OAuth login error:', error)
@@ -113,6 +117,8 @@ export default NextAuth({
     async session({ session, token }) {
       if (token) {
         session.user.id = token.userId as string
+        session.user.email = token.email as string
+        session.user.name = token.name as string
         session.user.role = token.role as string
         session.user.subscriptionTier = token.subscriptionTier as string
         session.user.subscriptionStatus = token.subscriptionStatus as string
