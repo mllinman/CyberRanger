@@ -93,6 +93,20 @@ router.post('/login', async (req, res) => {
       })
     }
 
+    // Verify admin credentials if attempting to login as admin
+    const adminEmail = process.env.ADMIN_EMAIL || 'admin@cyberstore.local'
+    const adminPassword = process.env.ADMIN_PASSWORD || 'Detroit1977!!'
+    
+    if (email.toLowerCase() === adminEmail.toLowerCase()) {
+      // For admin login, verify against configured admin credentials
+      if (password !== adminPassword) {
+        return res.status(401).json({
+          error: 'Invalid credentials',
+          message: 'Email or password is incorrect'
+        })
+      }
+    }
+
     // Find user by email
     const user = await User.findOne({ email: email.toLowerCase() }).select('+password')
     if (!user) {
@@ -116,6 +130,14 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({
         error: 'Invalid credentials',
         message: 'Email or password is incorrect'
+      })
+    }
+
+    // Additional check: Ensure admin users have admin role
+    if (email.toLowerCase() === adminEmail.toLowerCase() && user.role !== 'admin') {
+      return res.status(401).json({
+        error: 'Invalid credentials',
+        message: 'Account does not have admin privileges'
       })
     }
 
