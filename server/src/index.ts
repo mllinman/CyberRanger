@@ -38,8 +38,8 @@ app.use(cors({
     
     // Check if origin is in allowed list or matches Railway pattern
     if (allowedOrigins.some(allowed => 
-      allowed === origin || 
-      (allowed.includes('*') && origin.includes('railway.app'))
+      allowed && (allowed === origin || 
+      (allowed.includes('*') && origin.includes('railway.app')))
     )) {
       callback(null, true)
     } else {
