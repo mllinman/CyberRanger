@@ -5,6 +5,9 @@ client/.next/
 client/out/
 server/dist/
 
+# TypeScript build info
+*.tsbuildinfo
+
 # Dependencies
 node_modules/
 client/node_modules/

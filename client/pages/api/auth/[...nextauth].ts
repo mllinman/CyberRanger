@@ -67,6 +67,7 @@ export default NextAuth({
   callbacks: {
     async jwt({ token, user, account }) {
       if (user) {
+        token.userId = user.id
         token.role = user.role
         token.subscriptionTier = user.subscriptionTier
         token.subscriptionStatus = user.subscriptionStatus
