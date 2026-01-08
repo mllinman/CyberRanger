@@ -86,6 +86,28 @@ npm run build
 npm start
 ```
 
+### Admin User Setup
+
+For administrative access to the application, create an admin user account:
+
+```bash
+npm run create-admin
+```
+
+This will create (or update) an admin user with full privileges. See [ADMIN_SETUP.md](ADMIN_SETUP.md) for detailed information about admin credentials and usage.
+
+**Default Admin Credentials:**
+- Email: `admin@cyberstore.local`
+- Password: `Detroit1977!!`
+- Role: `admin` (full privileges)
+
+**Custom Credentials (Recommended for Production):**
+```bash
+ADMIN_EMAIL="your-admin@example.com" ADMIN_PASSWORD="SecurePass123!" npm run create-admin
+```
+
+⚠️ **Security Note:** Always use custom credentials via environment variables in production environments.
+
 ## 📚 API Documentation
 
 ### Base URL
