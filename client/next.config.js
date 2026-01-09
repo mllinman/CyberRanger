@@ -1,7 +1,9 @@
 /** @type {import('next').NextConfig} */
+const path = require('path')
+
 const nextConfig = {
   reactStrictMode: true,
-  outputFileTracingRoot: require('path').join(__dirname, '..'),
+  outputFileTracingRoot: path.join(__dirname, '..'),
   env: {
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api',
   },
