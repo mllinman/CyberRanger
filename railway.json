@@ -2,7 +2,7 @@
   "$schema": "https://railway.app/railway.schema.json",
   "build": {
     "builder": "NIXPACKS",
-    "buildCommand": "cd client && npm install --include=dev && npm run build && cd ../server && npm install --include=dev && rm -rf dist && npm run build && echo 'Client Build:' && ls -la ../client/.next && echo 'Server Build:' && ls -la dist"
+    "buildCommand": "cd client && npm install --include=dev && npm run build && cd ../server && npm install --include=dev && rm -rf dist && npm run build && echo '=== ROOT DIRECTORY ===' && ls -la / && echo '=== /app DIRECTORY ===' && ls -la /app && echo '=== CLIENT BUILD ===' && ls -la ../client/.next && echo '=== SERVER BUILD ===' && ls -la dist"
   },
   "deploy": {
     "startCommand": "cd server && npm start",
