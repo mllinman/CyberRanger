@@ -159,6 +159,18 @@ const startServer = async () => {
     console.log(`Checking if client dir exists: ${fs.existsSync(clientDir)}`)
     console.log(`Checking if .next exists: ${fs.existsSync(path.join(clientDir, '.next'))}`)
 
+    // List what's actually in /app
+    console.log('\n=== RUNTIME: /app contents ===')
+    if (fs.existsSync('/app')) {
+      console.log(fs.readdirSync('/app'))
+    } else {
+      console.log('/app does not exist!')
+    }
+
+    // List what's in current directory
+    console.log('\n=== RUNTIME: Current directory contents ===')
+    console.log(`CWD: ${process.cwd()}`)
+    console.log(fs.readdirSync(process.cwd()))
     // Check files in the resolved client directory
     if (fs.existsSync(clientDir)) {
       console.log('Contents of client dir:', fs.readdirSync(clientDir))
