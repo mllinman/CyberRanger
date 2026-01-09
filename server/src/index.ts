@@ -8,6 +8,7 @@ import rateLimit from 'express-rate-limit'
 import mongoose from 'mongoose'
 import next from 'next'
 import path from 'path'
+import fs from 'fs'
 
 // Import routes
 import productRoutes from './routes/products'
@@ -134,6 +135,20 @@ app.all('*', (req, res) => {
 const startServer = async () => {
   try {
     const dbConnected = await connectDB()
+
+    const clientDir = path.join(__dirname, '../../client')
+    console.log('----------------------------------------')
+    console.log('🔍 Debugging Paths:')
+    console.log(`Current __dirname: ${__dirname}`)
+    console.log(`Resolved client dir: ${clientDir}`)
+    console.log(`Checking if client dir exists: ${fs.existsSync(clientDir)}`)
+    console.log(`Checking if .next exists: ${fs.existsSync(path.join(clientDir, '.next'))}`)
+
+    // Check files in the resolved client directory
+    if (fs.existsSync(clientDir)) {
+      console.log('Contents of client dir:', fs.readdirSync(clientDir))
+    }
+    console.log('----------------------------------------')
 
     await nextApp.prepare()
     console.log('✅ Next.js app prepared')
