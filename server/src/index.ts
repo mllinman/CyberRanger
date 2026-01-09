@@ -25,9 +25,17 @@ const dev = process.env.NODE_ENV !== 'production'
 const potentialPaths = [
   path.join(__dirname, '../../client'), // Local structure (server/dist/ or server/src/)
   path.join(__dirname, '../client'),    // Flattened deployment structure (/app/dist/)
+  '/app/client',                        // Absolute path in Railway container
+  path.resolve(__dirname, '..', '..', 'client'), // Resolved path
 ]
 
+console.log('🔍 Searching for client directory...')
+potentialPaths.forEach(p => {
+  console.log(`  Checking: ${p} - exists: ${fs.existsSync(p)}`)
+})
+
 const clientDir = potentialPaths.find(p => fs.existsSync(p)) || path.join(__dirname, '../../client')
+console.log(`✅ Selected client dir: ${clientDir}`)
 const nextApp = next({ dev, dir: clientDir })
 const handle = nextApp.getRequestHandler()
 
