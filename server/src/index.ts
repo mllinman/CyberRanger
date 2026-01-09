@@ -23,7 +23,7 @@ const dev = process.env.NODE_ENV !== 'production'
 
 // Path resolution logic
 const potentialPaths = [
-  path.join(__dirname, '..'),           // Server directory (where we copy .next in production: /app when running from /app/dist)
+  path.join(__dirname, '..'),           // Server directory (production: .next copied here from client build, resolves to /app when running from /app/dist)
   path.join(__dirname, '../../client'), // Local structure (server/dist/ or server/src/)
   path.join(__dirname, '../client'),    // Flattened deployment structure (/app/dist/)
   '/app',                               // Absolute path to server dir in Railway
@@ -57,9 +57,9 @@ const clientDir = potentialPaths.find(p => {
 })
 
 if (!clientDir) {
-  console.error('❌ Could not find a valid client directory with .next build!')
+  console.error('❌ Could not find .next build directory!')
   console.error('Searched paths:', potentialPaths)
-  throw new Error('Client directory not found. Please ensure the client is built before starting the server.')
+  throw new Error('Next.js build not found. Please ensure the client is built before starting the server.')
 }
 
 console.log(`✅ Selected client dir: ${clientDir}`)
