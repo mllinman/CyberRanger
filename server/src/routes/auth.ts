@@ -1,6 +1,7 @@
 import express from 'express'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
+import crypto from 'crypto'
 import User from '../models/User'
 import { authenticateToken } from '../middleware/auth'
 
@@ -15,6 +16,22 @@ const getAdminConfig = () => ({
   email: process.env.ADMIN_EMAIL || 'admin@cyberstore.local',
   password: process.env.ADMIN_PASSWORD || 'Detroit1977!!'
 })
+
+// Timing-safe string comparison to prevent timing attacks
+const timingSafeStringCompare = (a: string, b: string): boolean => {
+  const bufA = Buffer.from(a, 'utf8')
+  const bufB = Buffer.from(b, 'utf8')
+  
+  // Pad shorter buffer to match length for constant-time comparison
+  const maxLength = Math.max(bufA.length, bufB.length)
+  const paddedA = Buffer.alloc(maxLength, 0)
+  const paddedB = Buffer.alloc(maxLength, 0)
+  bufA.copy(paddedA)
+  bufB.copy(paddedB)
+  
+  // Perform timing-safe comparison and also check original lengths match
+  return crypto.timingSafeEqual(paddedA, paddedB) && bufA.length === bufB.length
+}
 
 // Register new user
 router.post('/register', async (req, res) => {
@@ -116,19 +133,32 @@ router.post('/login', async (req, res) => {
       })
     }
 
-    // Verify password using bcrypt
-    const isValidPassword = await bcrypt.compare(password, user.password)
-    if (!isValidPassword) {
-      return res.status(401).json({
-        error: 'Invalid credentials',
-        message: 'Email or password is incorrect'
-      })
-    }
-
-    // Additional verification for admin users: ensure they have admin role
+    // Get admin configuration
     const adminConfig = getAdminConfig()
-    if (email.toLowerCase() === adminConfig.email.toLowerCase()) {
+    const isAdminEmail = email.toLowerCase() === adminConfig.email.toLowerCase()
+
+    // For admin users, verify password against the environment variable
+    // This ensures admin can always log in with the configured ADMIN_PASSWORD
+    if (isAdminEmail) {
+      // Admin must have admin role
       if (user.role !== 'admin') {
+        return res.status(401).json({
+          error: 'Invalid credentials',
+          message: 'Email or password is incorrect'
+        })
+      }
+
+      // Verify admin password against environment variable using timing-safe comparison
+      if (!timingSafeStringCompare(password, adminConfig.password)) {
+        return res.status(401).json({
+          error: 'Invalid credentials',
+          message: 'Email or password is incorrect'
+        })
+      }
+    } else {
+      // For regular users, verify password using bcrypt against database hash
+      const isValidPassword = await bcrypt.compare(password, user.password)
+      if (!isValidPassword) {
         return res.status(401).json({
           error: 'Invalid credentials',
           message: 'Email or password is incorrect'
@@ -279,7 +309,7 @@ router.put('/change-password', authenticateToken, async (req: AuthRequest, res) 
     if (user.email.toLowerCase() === adminConfig.email.toLowerCase()) {
       return res.status(403).json({
         error: 'Operation not permitted',
-        message: 'Admin password cannot be changed through this endpoint. Please update the ADMIN_PASSWORD environment variable and run the create-admin script.'
+        message: 'Admin password cannot be changed through this endpoint. Please update the ADMIN_PASSWORD environment variable.'
       })
     }
 
