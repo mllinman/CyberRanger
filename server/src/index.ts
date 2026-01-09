@@ -25,7 +25,8 @@ const dev = process.env.NODE_ENV !== 'production'
 const potentialPaths = [
   path.join(__dirname, '../../client'), // Local structure (server/dist/ or server/src/)
   path.join(__dirname, '../client'),    // Flattened deployment structure (/app/dist/)
-  '/app/client',                        // Absolute path in Railway container
+  path.join(__dirname, '..'),           // Server directory (where we copy .next)
+  '/app',                               // Absolute path to server dir in Railway
   path.resolve(__dirname, '..', '..', 'client'), // Resolved path
 ]
 
