@@ -26,7 +26,12 @@ export default NextAuth({
         }
 
         try {
-          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
+          const apiUrl = process.env.PORT
+            ? `http://localhost:${process.env.PORT}/api`
+            : process.env.NEXT_PUBLIC_API_URL
+
+          console.log(`[NextAuth] Authorizing with API URL: ${apiUrl}`)
+          const response = await fetch(`${apiUrl}/auth/login`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -42,7 +47,7 @@ export default NextAuth({
           }
 
           const { user, token } = await response.json()
-          
+
           if (user) {
             return {
               id: user.id,
@@ -56,7 +61,7 @@ export default NextAuth({
               accessToken: token
             }
           }
-          
+
           return null
         } catch (error) {
           console.error('Auth error:', error)
@@ -82,7 +87,11 @@ export default NextAuth({
       // Handle OAuth user creation/login
       if (account?.provider === 'google' || account?.provider === 'github') {
         try {
-          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/oauth-login`, {
+          const apiUrl = process.env.PORT
+            ? `http://localhost:${process.env.PORT}/api`
+            : process.env.NEXT_PUBLIC_API_URL
+
+          const response = await fetch(`${apiUrl}/auth/oauth-login`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
