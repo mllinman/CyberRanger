@@ -1,9 +1,10 @@
 # Railway Ignore File
 # Optimizes deployments by excluding unnecessary files
 
-# Client files (not needed for server deployment)
-client/
-.next/
+# Note: client/ is NOT ignored because it needs to be built during deployment
+# The build command in railway.json builds the client and copies .next to server/
+
+# Client build output (will be rebuilt on Railway)
 out/
 
 # C++ / Qt application files (not needed for Node.js server)
