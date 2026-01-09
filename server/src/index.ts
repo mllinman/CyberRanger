@@ -20,7 +20,15 @@ import userRoutes from './routes/users'
 dotenv.config()
 
 const dev = process.env.NODE_ENV !== 'production'
-const nextApp = next({ dev, dir: path.join(__dirname, '../../client') })
+
+// Path resolution logic
+const potentialPaths = [
+  path.join(__dirname, '../../client'), // Local structure (server/dist/ or server/src/)
+  path.join(__dirname, '../client'),    // Flattened deployment structure (/app/dist/)
+]
+
+const clientDir = potentialPaths.find(p => fs.existsSync(p)) || path.join(__dirname, '../../client')
+const nextApp = next({ dev, dir: clientDir })
 const handle = nextApp.getRequestHandler()
 
 const app = express()
@@ -136,11 +144,10 @@ const startServer = async () => {
   try {
     const dbConnected = await connectDB()
 
-    const clientDir = path.join(__dirname, '../../client')
     console.log('----------------------------------------')
     console.log('🔍 Debugging Paths:')
     console.log(`Current __dirname: ${__dirname}`)
-    console.log(`Resolved client dir: ${clientDir}`)
+    console.log(`Computed client dir: ${clientDir}`)
     console.log(`Checking if client dir exists: ${fs.existsSync(clientDir)}`)
     console.log(`Checking if .next exists: ${fs.existsSync(path.join(clientDir, '.next'))}`)
 
