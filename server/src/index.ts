@@ -32,10 +32,29 @@ const potentialPaths = [
 
 console.log('🔍 Searching for client directory...')
 potentialPaths.forEach(p => {
-  console.log(`  Checking: ${p} - exists: ${fs.existsSync(p)}`)
+  const hasNextBuild = fs.existsSync(path.join(p, '.next'))
+  console.log(`  Checking: ${p} - exists: ${fs.existsSync(p)}, has .next: ${hasNextBuild}`)
 })
 
-const clientDir = potentialPaths.find(p => fs.existsSync(p)) || path.join(__dirname, '../../client')
+// Find a directory that either has .next (production) or is a valid Next.js project (dev)
+const clientDir = potentialPaths.find(p => {
+  if (!fs.existsSync(p)) return false
+  // In production, check for .next directory
+  if (!dev && fs.existsSync(path.join(p, '.next'))) return true
+  // In dev mode, check for package.json with Next.js
+  if (dev) {
+    const pkgPath = path.join(p, 'package.json')
+    if (fs.existsSync(pkgPath)) {
+      try {
+        const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'))
+        return pkg.dependencies?.next || pkg.devDependencies?.next
+      } catch {
+        return false
+      }
+    }
+  }
+  return false
+}) || path.join(__dirname, '../../client')
 console.log(`✅ Selected client dir: ${clientDir}`)
 const nextApp = next({ dev, dir: clientDir })
 const handle = nextApp.getRequestHandler()

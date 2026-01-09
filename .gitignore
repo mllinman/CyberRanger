@@ -4,6 +4,8 @@ cmake-build-*/
 client/.next/
 client/out/
 server/dist/
+server/.next/
+server/test_scenario/
 
 # TypeScript build info
 *.tsbuildinfo
