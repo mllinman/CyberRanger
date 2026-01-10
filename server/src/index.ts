@@ -22,12 +22,16 @@ dotenv.config()
 const dev = process.env.NODE_ENV !== 'production'
 
 // Path resolution logic
+// When running from /app/dist, __dirname is /app/dist
+// The .next directory is copied to /app/dist/ during build
 const potentialPaths = [
-  path.join(__dirname, '..'),           // Server directory (production: .next copied here from client build, resolves to /app when running from /app/dist)
-  path.join(__dirname, '../../client'), // Local structure (server/dist/ or server/src/)
-  path.join(__dirname, '../client'),    // Flattened deployment structure (/app/dist/)
+  __dirname,                            // dist directory itself: /app/dist (production - .next is copied here)
+  path.join(__dirname, '..'),           // Server root: /app (alternative location)
+  path.join(__dirname, '../..'),        // Parent of server: /home/runner/work/CyberRanger/CyberRanger (local dev)
+  path.join(__dirname, '../../client'), // Local structure: client directory (local dev)
+  path.join(__dirname, '../client'),    // Flattened deployment structure
   '/app',                               // Absolute path to server dir in Railway
-  path.resolve(__dirname, '..', '..', 'client'), // Resolved path
+  path.resolve(__dirname, '..', '..', 'client'), // Resolved path to client
 ]
 
 console.log('🔍 Searching for client directory...')

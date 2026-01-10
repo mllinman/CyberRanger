@@ -5,7 +5,7 @@ nixPkgs = ["nodejs-18_x", "npm-9_x"]
 cmds = ["cd client && npm ci --prefer-offline --no-audit && cd ../server && npm ci --prefer-offline --no-audit"]
 
 [phases.build]
-cmds = ["cd client && npm run build && cd ../server && npm run build && cp -r ../client/.next ./ && (test -d ../client/public && cp -r ../client/public ./ || true)"]
+cmds = ["cd client && npm run build && cd ../server && npm run build && mkdir -p dist && cp -r ../client/.next dist/ && (test -d ../client/public && cp -r ../client/public dist/ || true)"]
 
 [start]
 cmd = "cd server && npm start"
