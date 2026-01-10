@@ -16,6 +16,8 @@ import authRoutes from './routes/auth'
 import orderRoutes from './routes/orders'
 import paymentRoutes from './routes/payments'
 import userRoutes from './routes/users'
+import fileRoutes from './routes/files'
+import logRoutes from './routes/logs'
 
 dotenv.config()
 
@@ -25,8 +27,8 @@ const dev = process.env.NODE_ENV !== 'production'
 // When running from /app/dist, __dirname is /app/dist
 // The .next directory is copied to /app/dist/ during build
 const potentialPaths = [
-  __dirname,                            // dist directory itself: /app/dist (production - .next is copied here)
-  path.join(__dirname, '..'),           // Server root: /app (alternative location)
+  __dirname,                            // dist directory itself: /app/dist
+  path.join(__dirname, '..'),           // Server root: /app (Target location for .next)
   path.join(__dirname, '../..'),        // Parent of server: /home/runner/work/CyberRanger/CyberRanger (local dev)
   path.join(__dirname, '../../client'), // Local structure: client directory (local dev)
   path.join(__dirname, '../client'),    // Flattened deployment structure
@@ -148,6 +150,8 @@ app.use('/api/auth', authRoutes)
 app.use('/api/orders', orderRoutes)
 app.use('/api/payments', paymentRoutes)
 app.use('/api/users', userRoutes)
+app.use('/api/files', fileRoutes)
+app.use('/api/logs', logRoutes)
 
 // Root endpoint handled by Next.js
 // app.get('/', (req, res) => { ... })
