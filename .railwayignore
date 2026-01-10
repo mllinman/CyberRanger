@@ -62,7 +62,8 @@ __tests__/
 test/
 
 # Build artifacts (will be rebuilt on Railway)
-server/dist/
+# Note: server/dist/ is NOT ignored because it contains the compiled server code 
+# and the .next directory copied during build. These are needed at runtime.
 server/node_modules/
 node_modules/
 
