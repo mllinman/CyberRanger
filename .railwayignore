@@ -23,8 +23,8 @@ ui/
 assets/banner.png
 assets/app_icon.png
 *.qrc
-*.sh
-!build-railway.sh
+build_linux.sh
+build_web.sh
 *.bat
 installer/
 src/*.cpp
