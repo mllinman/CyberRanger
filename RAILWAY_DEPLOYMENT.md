@@ -114,10 +114,26 @@ After deployment, verify your app is running:
 curl https://your-app.railway.app/api/health
 ```
 
-Expected response:
+The healthcheck endpoint is designed to respond immediately, even during application startup. This ensures Railway's healthcheck doesn't timeout during initialization.
+
+Expected response during startup:
 ```json
 {
   "status": "OK",
+  "ready": false,
+  "message": "CyberStore API is starting up",
+  "timestamp": "2024-01-08T...",
+  "environment": "production",
+  "database": "disconnected",
+  "stripe": "configured"
+}
+```
+
+Expected response after full initialization:
+```json
+{
+  "status": "OK",
+  "ready": true,
   "message": "CyberStore API is running",
   "timestamp": "2024-01-08T...",
   "environment": "production",
@@ -125,6 +141,8 @@ Expected response:
   "stripe": "configured"
 }
 ```
+
+The `ready` field indicates whether the application has fully initialized. The healthcheck always returns HTTP 200, even during startup, to satisfy Railway's healthcheck requirements.
 
 ## Testing the Deployment
 
