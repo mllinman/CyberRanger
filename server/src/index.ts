@@ -24,23 +24,23 @@ dotenv.config()
 const dev = process.env.NODE_ENV !== 'production'
 
 // Path resolution logic
-// In Railway deployments, the directory structure can vary:
-// - Build creates .next at /app/server/dist/.next
-// - Runtime might access it from /app/dist/.next (if Railway maps server to /app)
-// - Or from current working directory
+// In Railway deployments, the directory structure is:
+// - Build phase: /app/client/.next is created and copied to /app/server/dist/.next
+// - Runtime: Application runs from /app with `node server/dist/index.js`
+// - This means __dirname = /app/server/dist and process.cwd() = /app
 const potentialPaths = [
-  __dirname,                             // dist directory itself (e.g., /app/dist or /app/server/dist)
-  process.cwd(),                         // Current working directory
+  __dirname,                             // dist directory itself (e.g., /app/server/dist)
+  process.cwd(),                         // Current working directory (/app)
   path.join(process.cwd(), 'dist'),      // dist relative to cwd
-  path.join(__dirname, '..'),            // Parent of dist (e.g., /app or /app/server)
-  path.join(__dirname, '../..'),         // Grandparent of dist (e.g., / or /app)
+  path.join(__dirname, '..'),            // Parent of dist (e.g., /app/server)
+  path.join(__dirname, '../..'),         // Grandparent of dist (e.g., /app)
   path.join(__dirname, '../../client'),  // Client directory in local dev
   path.join(__dirname, '../client'),     // Client directory if flattened
-  '/app/dist',                           // Absolute Railway dist path (when directory is flattened)
+  '/app/dist',                           // Legacy: Absolute Railway dist path (if structure changes)
   '/app',                                // Absolute Railway path
   '/app/server',                         // Absolute server path  
-  '/app/server/dist',                    // Absolute dist path
-  path.resolve(__dirname, '..', '..', 'client'), // Resolved client path
+  '/app/server/dist',                    // Absolute dist path (should match __dirname)
+  path.resolve(__dirname, '..', '..', 'client'), // Resolved client path for local dev
 ]
 
 console.log('🔍 Searching for client directory...')
@@ -204,6 +204,34 @@ const startServer = async () => {
     console.log(`Checking if client dir exists: ${fs.existsSync(clientDir)}`)
     console.log(`Checking if .next exists: ${fs.existsSync(path.join(clientDir, '.next'))}`)
 
+    // Check for build marker
+    console.log('\n=== BUILD MARKER CHECK ===')
+    const markerPath = path.join(__dirname, '.next', 'BUILD_MARKER.txt')
+    if (fs.existsSync(markerPath)) {
+      console.log('✓ BUILD_MARKER found! This confirms .next directory was built and copied successfully.')
+      console.log('Marker contents:')
+      console.log(fs.readFileSync(markerPath, 'utf-8'))
+    } else {
+      console.log('✗ BUILD_MARKER not found at:', markerPath)
+      console.log('This indicates either:')
+      console.log('  1. The build process did not complete successfully')
+      console.log('  2. The .next directory was not copied to the runtime environment')
+      console.log('  3. The directory structure is different than expected')
+    }
+
+    // Check __dirname contents
+    console.log('\n=== RUNTIME: __dirname contents ===')
+    console.log(`__dirname: ${__dirname}`)
+    if (fs.existsSync(__dirname)) {
+      const files = fs.readdirSync(__dirname)
+      console.log('Files in __dirname:', files)
+      if (files.includes('.next')) {
+        console.log('✓ .next found in __dirname!')
+      } else {
+        console.log('✗ .next NOT found in __dirname')
+      }
+    }
+
     // List what's actually in /app
     console.log('\n=== RUNTIME: /app contents ===')
     if (fs.existsSync('/app')) {
@@ -216,8 +244,10 @@ const startServer = async () => {
     console.log('\n=== RUNTIME: Current directory contents ===')
     console.log(`CWD: ${process.cwd()}`)
     console.log(fs.readdirSync(process.cwd()))
+    
     // Check files in the resolved client directory
     if (fs.existsSync(clientDir)) {
+      console.log('\n=== RUNTIME: Client dir contents ===')
       console.log('Contents of client dir:', fs.readdirSync(clientDir))
     }
     console.log('----------------------------------------')
