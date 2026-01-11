@@ -47,7 +47,15 @@ echo "Source: $BASE_DIR/client/.next"
 echo "Destination: $BASE_DIR/server/dist/"
 echo "Checking source exists:"
 ls -la "$BASE_DIR/client/.next" | head -10
-cp -r "$BASE_DIR/client/.next" "$BASE_DIR/server/dist/"
+
+# Use rsync if available, fallback to cp
+if command -v rsync &> /dev/null; then
+  echo "Using rsync for copy..."
+  rsync -av "$BASE_DIR/client/.next" "$BASE_DIR/server/dist/" || cp -r "$BASE_DIR/client/.next" "$BASE_DIR/server/dist/"
+else
+  echo "Using cp for copy..."
+  cp -r "$BASE_DIR/client/.next" "$BASE_DIR/server/dist/"
+fi
 
 echo "=== .NEXT COPY COMPLETE ==="
 echo "Verifying destination:"
@@ -58,10 +66,20 @@ if [ -d "$BASE_DIR/server/dist/.next" ]; then
   echo "✓ .next copied successfully to server/dist/"
   echo "Contents of .next directory:"
   ls -la "$BASE_DIR/server/dist/.next" | head -10
+  echo "Size of .next directory:"
+  du -sh "$BASE_DIR/server/dist/.next"
 else
   echo "✗ .next copy failed!"
+  echo "DEBUG: Listing server/dist contents:"
+  find "$BASE_DIR/server/dist" -maxdepth 2 -type d
   exit 1
 fi
+
+# Copy Next.js config and package.json (needed by Next.js at runtime)
+echo ""
+echo "📋 Copying Next.js configuration files..."
+cp "$BASE_DIR/client/next.config.js" "$BASE_DIR/server/dist/" 2>/dev/null || echo "⚠️  next.config.js not found"
+cp "$BASE_DIR/client/package.json" "$BASE_DIR/server/dist/" 2>/dev/null || echo "⚠️  package.json not found"
 
 # Also copy .next to the base dist directory for Railway deployments
 # Railway may flatten the directory structure, so we ensure .next is accessible
@@ -84,6 +102,11 @@ else
   ls -la "$BASE_DIR/dist/" || echo "Could not list base dist"
 fi
 
+# Copy Next.js config files to base dist as well
+echo "📋 Copying Next.js configuration files to base dist..."
+cp "$BASE_DIR/client/next.config.js" "$BASE_DIR/dist/" 2>/dev/null || echo "⚠️  next.config.js not found"
+cp "$BASE_DIR/client/package.json" "$BASE_DIR/dist/" 2>/dev/null || echo "⚠️  package.json not found"
+
 # Copy public directory if it exists
 if [ -d "$BASE_DIR/client/public" ]; then
   echo "📂 Copying public directory to server/dist..."
@@ -105,6 +128,20 @@ ls -la "$BASE_DIR/server/dist"
 echo ""
 echo "=== dist/.next CONTENTS (first 20 items) ==="
 ls -la "$BASE_DIR/server/dist/.next" | head -20
+
+# Create a build marker file to prove .next was present during build
+echo "Creating build marker file..."
+echo "Build completed at $(date)" > "$BASE_DIR/server/dist/.next/BUILD_MARKER.txt"
+echo "Build directory: $BASE_DIR" >> "$BASE_DIR/server/dist/.next/BUILD_MARKER.txt"
+echo "✓ Build marker created"
+
+# Final verification
+echo ""
+echo "=== FINAL VERIFICATION ==="
+echo "Checking critical files exist in server/dist:"
+[ -d "$BASE_DIR/server/dist/.next" ] && echo "✓ .next directory exists" || echo "✗ .next directory missing!"
+[ -f "$BASE_DIR/server/dist/.next/BUILD_MARKER.txt" ] && echo "✓ Build marker exists" || echo "✗ Build marker missing!"
+[ -f "$BASE_DIR/server/dist/index.js" ] && echo "✓ index.js exists" || echo "✗ index.js missing!"
 
 echo ""
 echo "========================================"

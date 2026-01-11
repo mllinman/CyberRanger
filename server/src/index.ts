@@ -204,6 +204,29 @@ const startServer = async () => {
     console.log(`Checking if client dir exists: ${fs.existsSync(clientDir)}`)
     console.log(`Checking if .next exists: ${fs.existsSync(path.join(clientDir, '.next'))}`)
 
+    // Check for build marker
+    console.log('\n=== BUILD MARKER CHECK ===')
+    const markerPath = path.join(__dirname, '.next', 'BUILD_MARKER.txt')
+    if (fs.existsSync(markerPath)) {
+      console.log('✓ BUILD_MARKER found! Contents:')
+      console.log(fs.readFileSync(markerPath, 'utf-8'))
+    } else {
+      console.log('✗ BUILD_MARKER not found at:', markerPath)
+    }
+
+    // Check __dirname contents
+    console.log('\n=== RUNTIME: __dirname contents ===')
+    console.log(`__dirname: ${__dirname}`)
+    if (fs.existsSync(__dirname)) {
+      const files = fs.readdirSync(__dirname)
+      console.log('Files in __dirname:', files)
+      if (files.includes('.next')) {
+        console.log('✓ .next found in __dirname!')
+      } else {
+        console.log('✗ .next NOT found in __dirname')
+      }
+    }
+
     // List what's actually in /app
     console.log('\n=== RUNTIME: /app contents ===')
     if (fs.existsSync('/app')) {
@@ -216,8 +239,10 @@ const startServer = async () => {
     console.log('\n=== RUNTIME: Current directory contents ===')
     console.log(`CWD: ${process.cwd()}`)
     console.log(fs.readdirSync(process.cwd()))
+    
     // Check files in the resolved client directory
     if (fs.existsSync(clientDir)) {
+      console.log('\n=== RUNTIME: Client dir contents ===')
       console.log('Contents of client dir:', fs.readdirSync(clientDir))
     }
     console.log('----------------------------------------')
