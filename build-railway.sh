@@ -40,6 +40,17 @@ npm run build
 echo "=== SERVER BUILD COMPLETE ==="
 ls -la dist | head -20
 
+# Function to safely copy a file if it exists
+safe_copy() {
+  local src="$1"
+  local dest="$2"
+  if [ -f "$src" ]; then
+    cp "$src" "$dest" && echo "✓ Copied $(basename "$src")" || echo "⚠️  Failed to copy $(basename "$src")"
+  else
+    echo "ℹ️  File not found: $(basename "$src"), skipping"
+  fi
+}
+
 # Copy .next to server dist using absolute paths
 echo ""
 echo "📋 Copying .next to server dist..."
@@ -51,7 +62,12 @@ ls -la "$BASE_DIR/client/.next" | head -10
 # Use rsync if available, fallback to cp
 if command -v rsync &> /dev/null; then
   echo "Using rsync for copy..."
-  rsync -av "$BASE_DIR/client/.next" "$BASE_DIR/server/dist/" || cp -r "$BASE_DIR/client/.next" "$BASE_DIR/server/dist/"
+  if rsync -av "$BASE_DIR/client/.next" "$BASE_DIR/server/dist/"; then
+    echo "✓ rsync completed successfully"
+  else
+    echo "⚠️  rsync failed, falling back to cp..."
+    cp -r "$BASE_DIR/client/.next" "$BASE_DIR/server/dist/"
+  fi
 else
   echo "Using cp for copy..."
   cp -r "$BASE_DIR/client/.next" "$BASE_DIR/server/dist/"
@@ -77,9 +93,9 @@ fi
 
 # Copy Next.js config and package.json (needed by Next.js at runtime)
 echo ""
-echo "📋 Copying Next.js configuration files..."
-cp "$BASE_DIR/client/next.config.js" "$BASE_DIR/server/dist/" 2>/dev/null || echo "⚠️  next.config.js not found"
-cp "$BASE_DIR/client/package.json" "$BASE_DIR/server/dist/" 2>/dev/null || echo "⚠️  package.json not found"
+echo "📋 Copying Next.js configuration files to server/dist..."
+safe_copy "$BASE_DIR/client/next.config.js" "$BASE_DIR/server/dist/"
+safe_copy "$BASE_DIR/client/package.json" "$BASE_DIR/server/dist/"
 
 # Also copy .next to the base dist directory for Railway deployments
 # Railway may flatten the directory structure, so we ensure .next is accessible
@@ -103,9 +119,10 @@ else
 fi
 
 # Copy Next.js config files to base dist as well
+echo ""
 echo "📋 Copying Next.js configuration files to base dist..."
-cp "$BASE_DIR/client/next.config.js" "$BASE_DIR/dist/" 2>/dev/null || echo "⚠️  next.config.js not found"
-cp "$BASE_DIR/client/package.json" "$BASE_DIR/dist/" 2>/dev/null || echo "⚠️  package.json not found"
+safe_copy "$BASE_DIR/client/next.config.js" "$BASE_DIR/dist/"
+safe_copy "$BASE_DIR/client/package.json" "$BASE_DIR/dist/"
 
 # Copy public directory if it exists
 if [ -d "$BASE_DIR/client/public" ]; then
