@@ -77,7 +77,8 @@ if (!clientDir) {
   console.error('Searched paths:', potentialPaths)
   console.warn('⚠️  Server will start but Next.js features will not be available')
   // Don't throw an error - let the server start anyway for healthchecks
-  clientDir = potentialPaths[0] // Use a fallback
+  // Use first potential path as fallback (prefer current directory)
+  clientDir = potentialPaths.length > 0 ? potentialPaths[0] : process.cwd()
 }
 
 console.log(`✅ Selected client dir: ${clientDir}`)
@@ -141,7 +142,7 @@ app.use(compression())
 app.use(morgan('combined'))
 
 // Database connection
-const connectDB = async () => {
+const connectDB = async (): Promise<boolean> => {
   try {
     const mongoURI = process.env.MONGODB_URI
 
