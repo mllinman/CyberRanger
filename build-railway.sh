@@ -49,17 +49,35 @@ echo "=== .NEXT COPY COMPLETE ==="
 
 # Verify .next was copied successfully
 if [ -d "$BASE_DIR/server/dist/.next" ]; then
-  echo "✓ .next copied successfully to ./dist/"
+  echo "✓ .next copied successfully to server/dist/"
 else
   echo "✗ .next copy failed!"
   exit 1
 fi
 
+# Also copy .next to the base dist directory for Railway deployments
+# Railway may flatten the directory structure, so we ensure .next is accessible
+# from both /app/server/dist and /app/dist
+echo ""
+echo "📋 Copying .next to base dist directory for Railway..."
+mkdir -p "$BASE_DIR/dist"
+cp -r "$BASE_DIR/client/.next" "$BASE_DIR/dist/"
+
+if [ -d "$BASE_DIR/dist/.next" ]; then
+  echo "✓ .next copied successfully to base dist/"
+else
+  echo "⚠️  Warning: .next copy to base dist failed"
+fi
+
 # Copy public directory if it exists
 if [ -d "$BASE_DIR/client/public" ]; then
-  echo "📂 Copying public directory..."
+  echo "📂 Copying public directory to server/dist..."
   cp -r "$BASE_DIR/client/public" "$BASE_DIR/server/dist/"
-  echo "✓ public directory copied"
+  echo "✓ public directory copied to server/dist"
+  
+  echo "📂 Copying public directory to base dist..."
+  cp -r "$BASE_DIR/client/public" "$BASE_DIR/dist/"
+  echo "✓ public directory copied to base dist"
 else
   echo "ℹ️  No public directory to copy"
 fi

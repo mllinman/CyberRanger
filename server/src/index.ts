@@ -36,6 +36,7 @@ const potentialPaths = [
   path.join(__dirname, '../..'),         // Grandparent of dist (e.g., / or /app)
   path.join(__dirname, '../../client'),  // Client directory in local dev
   path.join(__dirname, '../client'),     // Client directory if flattened
+  '/app/dist',                           // Absolute Railway dist path (when directory is flattened)
   '/app',                                // Absolute Railway path
   '/app/server',                         // Absolute server path  
   '/app/server/dist',                    // Absolute dist path
