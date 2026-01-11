@@ -2,10 +2,10 @@
 nixPkgs = ["nodejs-18_x", "npm-9_x"]
 
 [phases.install]
-cmds = ["cd client && npm ci --prefer-offline --no-audit && cd ../server && npm ci --prefer-offline --no-audit"]
+cmds = ["cd client && npm ci --include=dev --prefer-offline --no-audit && cd ../server && npm ci --include=dev --prefer-offline --no-audit"]
 
 [phases.build]
-cmds = ["cd client && npm run build && cd ../server && npm run build && mkdir -p dist && cp -r ../client/.next dist/ && (test -d ../client/public && cp -r ../client/public dist/ || true) && echo '--- DEBUG: Contents of server/dist ---' && ls -la dist/ && echo '--- DEBUG: Contents of server/dist/.next ---' && ls -la dist/.next"]
+cmds = ["cd client && npm run build && echo '=== CLIENT BUILD COMPLETE ===' && test -d .next && echo '✓ Client .next exists' || (echo '✗ Client .next missing!' && exit 1) && cd ../server && npm run build && echo '=== SERVER BUILD COMPLETE ===' && ls -la dist && cp -r ../client/.next ./dist/.next && echo '=== .NEXT COPY COMPLETE ===' && test -d ./dist/.next && echo '✓ .next copied to dist' || (echo '✗ .next copy failed!' && exit 1) && (test -d ../client/public && cp -r ../client/public ./dist/public || true) && echo '=== FINAL dist CONTENTS ===' && ls -la ./dist && ls -la ./dist/.next | head -20"]
 
 [start]
 cmd = "cd server && npm start"
