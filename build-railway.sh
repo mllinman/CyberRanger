@@ -1,17 +1,21 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Railway deployment build script
 # This script builds both the client and server, and copies necessary files to the server dist directory
 
 set -e  # Exit immediately if a command exits with a non-zero status
 
+# Store the base directory
+BASE_DIR="$(pwd)"
+
 echo "========================================"
 echo "🚀 Starting CyberStore Build Process"
 echo "========================================"
+echo "Base directory: $BASE_DIR"
 
 # Build Client
 echo ""
 echo "📦 Building Client..."
-cd client
+cd "$BASE_DIR/client"
 npm install --include=dev
 npm run build
 
@@ -29,22 +33,22 @@ fi
 # Build Server
 echo ""
 echo "🔧 Building Server..."
-cd ../server
+cd "$BASE_DIR/server"
 npm install --include=dev
 npm run build
 
 echo "=== SERVER BUILD COMPLETE ==="
 ls -la dist | head -20
 
-# Copy .next to server dist
+# Copy .next to server dist using absolute paths
 echo ""
 echo "📋 Copying .next to server dist..."
-cp -r ../client/.next ./dist/
+cp -r "$BASE_DIR/client/.next" "$BASE_DIR/server/dist/"
 
 echo "=== .NEXT COPY COMPLETE ==="
 
 # Verify .next was copied successfully
-if [ -d "./dist/.next" ]; then
+if [ -d "$BASE_DIR/server/dist/.next" ]; then
   echo "✓ .next copied successfully to ./dist/"
 else
   echo "✗ .next copy failed!"
@@ -52,9 +56,9 @@ else
 fi
 
 # Copy public directory if it exists
-if [ -d "../client/public" ]; then
+if [ -d "$BASE_DIR/client/public" ]; then
   echo "📂 Copying public directory..."
-  cp -r ../client/public ./dist/
+  cp -r "$BASE_DIR/client/public" "$BASE_DIR/server/dist/"
   echo "✓ public directory copied"
 else
   echo "ℹ️  No public directory to copy"
@@ -63,11 +67,11 @@ fi
 # Show final structure
 echo ""
 echo "=== FINAL dist CONTENTS ==="
-ls -la ./dist
+ls -la "$BASE_DIR/server/dist"
 
 echo ""
 echo "=== dist/.next CONTENTS (first 20 items) ==="
-ls -la ./dist/.next | head -20
+ls -la "$BASE_DIR/server/dist/.next" | head -20
 
 echo ""
 echo "========================================"
