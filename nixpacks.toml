@@ -5,7 +5,7 @@ nixPkgs = ["...", "nodejs-18_x", "npm-9_x"]
 cmds = ["cd client && npm ci --include=dev --prefer-offline --no-audit && cd ../server && npm ci --include=dev --prefer-offline --no-audit"]
 
 [phases.build]
-cmds = ["...", "chmod +x ./build-railway.sh", "bash ./build-railway.sh"]
+cmds = ["...", "sed -i 's/\r$//' ./build-railway.sh", "chmod +x ./build-railway.sh", "bash ./build-railway.sh"]
 
 [start]
 cmd = "node server/dist/index.js"
