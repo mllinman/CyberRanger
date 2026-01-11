@@ -25,6 +25,7 @@ assets/app_icon.png
 *.qrc
 build_linux.sh
 build_web.sh
+!build-railway.sh
 *.bat
 installer/
 src/*.cpp
