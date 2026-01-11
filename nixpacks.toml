@@ -12,3 +12,4 @@ cmd = "node server/dist/index.js"
 
 [variables]
 NODE_ENV = "production"
+NIXPACKS_PATH = "/app/node_modules/.bin"
