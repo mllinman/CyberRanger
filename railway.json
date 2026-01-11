@@ -2,7 +2,7 @@
   "$schema": "https://railway.app/railway.schema.json",
   "build": {
     "builder": "NIXPACKS",
-    "buildCommand": "cd client && npm install --include=dev && npm run build && echo '=== CLIENT BUILD COMPLETE ===' && ls -la . && test -d .next && echo '✓ .next directory exists' || (echo '✗ .next directory missing!' && exit 1) && cd ../server && npm install --include=dev && npm run build && echo '=== SERVER BUILD COMPLETE ===' && ls -la dist && cp -r ../client/.next ./dist/.next && echo '=== .NEXT COPY COMPLETE ===' && test -d ./dist/.next && echo '✓ .next copied successfully' || (echo '✗ .next copy failed!' && exit 1) && ls -la ./dist && (test -d ../client/public && cp -r ../client/public ./dist/public || true) && echo '=== FINAL dist CONTENTS ===' && ls -la ./dist"
+    "buildCommand": "cd client && npm install --include=dev && npm run build && echo '=== CLIENT BUILD COMPLETE ===' && ls -la . && test -d .next && echo '✓ .next directory exists' || (echo '✗ .next directory missing!' && exit 1) && cd ../server && npm install --include=dev && npm run build && echo '=== SERVER BUILD COMPLETE ===' && ls -la dist && cp -r ../client/.next ./dist/ && echo '=== .NEXT COPY COMPLETE ===' && test -d ./dist/.next && echo '✓ .next copied successfully' || (echo '✗ .next copy failed!' && exit 1) && ls -la ./dist && (test -d ../client/public && cp -r ../client/public ./dist/ || true) && echo '=== FINAL dist CONTENTS ===' && ls -la ./dist"
   },
   "deploy": {
     "startCommand": "cd server && npm start",
