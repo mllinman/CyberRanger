@@ -24,6 +24,7 @@ assets/banner.png
 assets/app_icon.png
 *.qrc
 *.sh
+!build-railway.sh
 *.bat
 installer/
 src/*.cpp
