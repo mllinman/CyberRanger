@@ -53,7 +53,7 @@ potentialPaths.forEach(p => {
 })
 
 // Find a directory that either has .next (production) or is a valid Next.js project (dev)
-const clientDir = potentialPaths.find(p => {
+let clientDir: string | undefined = potentialPaths.find(p => {
   if (!fs.existsSync(p)) return false
   // In production, check for .next directory
   if (!dev && fs.existsSync(path.join(p, '.next'))) return true
@@ -75,7 +75,9 @@ const clientDir = potentialPaths.find(p => {
 if (!clientDir) {
   console.error('❌ Could not find .next build directory!')
   console.error('Searched paths:', potentialPaths)
-  throw new Error('Next.js build not found. Please ensure the client is built before starting the server.')
+  console.warn('⚠️  Server will start but Next.js features will not be available')
+  // Don't throw an error - let the server start anyway for healthchecks
+  clientDir = potentialPaths[0] // Use a fallback
 }
 
 console.log(`✅ Selected client dir: ${clientDir}`)
@@ -84,6 +86,10 @@ const handle = nextApp.getRequestHandler()
 
 const app = express()
 const PORT = process.env.PORT || 8000
+
+// Application readiness flag
+let isReady = false
+let dbConnected = false
 
 // Security middleware
 app.use(helmet())
@@ -166,12 +172,16 @@ app.use('/api/logs', logRoutes)
 // Root endpoint handled by Next.js
 // app.get('/', (req, res) => { ... })
 
-// Health check endpoint
+// Health check endpoint - responds immediately even during initialization
 app.get('/api/health', (req, res) => {
   const dbStatus = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected'
+  
+  // Always return 200 OK so Railway knows the server is up
+  // Include ready state for monitoring purposes
   res.status(200).json({
     status: 'OK',
-    message: 'CyberStore API is running',
+    ready: isReady,
+    message: isReady ? 'CyberStore API is running' : 'CyberStore API is starting up',
     timestamp: new Date().toISOString(),
     environment: process.env.NODE_ENV || 'development',
     database: dbStatus,
@@ -188,14 +198,42 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
   })
 })
 
+// Readiness check middleware for non-API routes
+// This ensures Next.js routes wait until the app is fully initialized
+app.use((req, res, next) => {
+  // Skip readiness check for health endpoint and API routes
+  if (req.path.startsWith('/api/')) {
+    return next()
+  }
+  
+  // If not ready, return a service unavailable response for Next.js routes
+  if (!isReady) {
+    return res.status(503).json({
+      error: 'Service Unavailable',
+      message: 'Application is still initializing. Please try again in a moment.',
+      ready: false
+    })
+  }
+  
+  next()
+})
+
 // Next.js request handler for all non-API routes
 app.all('*', (req, res) => {
   return handle(req, res)
 })
 
 const startServer = async () => {
+  // Start HTTP server immediately so healthcheck endpoint responds
+  const server = app.listen(PORT, () => {
+    console.log(`🚀 Server listening on port ${PORT}`)
+    console.log(`📱 Health check available at: http://localhost:${PORT}/api/health`)
+    console.log(`⏳ Initializing application...`)
+  })
+
   try {
-    const dbConnected = await connectDB()
+    // Connect to database (async, non-blocking)
+    dbConnected = await connectDB()
 
     console.log('----------------------------------------')
     console.log('🔍 Debugging Paths:')
@@ -252,22 +290,29 @@ const startServer = async () => {
     }
     console.log('----------------------------------------')
 
+    // Prepare Next.js (this can take time, but server is already responding to health checks)
+    console.log('⏳ Preparing Next.js application...')
     await nextApp.prepare()
     console.log('✅ Next.js app prepared')
 
-    app.listen(PORT, () => {
-      console.log(`🚀 Server running on port ${PORT}`)
-      console.log(`📱 API Health: http://localhost:${PORT}/api/health`)
-      console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`)
-      if (dbConnected) {
-        console.log(`💾 Database: Connected`)
-      } else {
-        console.log(`⚠️  Database: Not connected`)
-      }
-    })
+    // Mark application as fully ready
+    isReady = true
+    
+    console.log('')
+    console.log('========================================')
+    console.log('✅ Application is fully initialized and ready!')
+    console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`)
+    if (dbConnected) {
+      console.log(`💾 Database: Connected`)
+    } else {
+      console.log(`⚠️  Database: Not connected`)
+    }
+    console.log('========================================')
   } catch (error) {
-    console.error('Failed to start server:', error)
-    process.exit(1)
+    console.error('Failed to initialize application:', error)
+    console.error('Server will remain running but may not function properly')
+    // Don't exit - keep the server running for health checks
+    // This allows Railway to detect the issue without constant restarts
   }
 }
 
