@@ -16,7 +16,7 @@ echo "Base directory: $BASE_DIR"
 echo ""
 echo "📦 Building Client..."
 cd "$BASE_DIR/client"
-npm install --include=dev
+# Dependencies already installed by nixpacks, just build
 npm run build
 
 echo "=== CLIENT BUILD COMPLETE ==="
@@ -34,7 +34,7 @@ fi
 echo ""
 echo "🔧 Building Server..."
 cd "$BASE_DIR/server"
-npm install --include=dev
+# Dependencies already installed by nixpacks, just build
 npm run build
 
 echo "=== SERVER BUILD COMPLETE ==="
