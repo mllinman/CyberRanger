@@ -43,13 +43,21 @@ ls -la dist | head -20
 # Copy .next to server dist using absolute paths
 echo ""
 echo "📋 Copying .next to server dist..."
+echo "Source: $BASE_DIR/client/.next"
+echo "Destination: $BASE_DIR/server/dist/"
+echo "Checking source exists:"
+ls -la "$BASE_DIR/client/.next" | head -10
 cp -r "$BASE_DIR/client/.next" "$BASE_DIR/server/dist/"
 
 echo "=== .NEXT COPY COMPLETE ==="
+echo "Verifying destination:"
+ls -la "$BASE_DIR/server/dist/" | head -20
 
 # Verify .next was copied successfully
 if [ -d "$BASE_DIR/server/dist/.next" ]; then
   echo "✓ .next copied successfully to server/dist/"
+  echo "Contents of .next directory:"
+  ls -la "$BASE_DIR/server/dist/.next" | head -10
 else
   echo "✗ .next copy failed!"
   exit 1
@@ -61,12 +69,19 @@ fi
 echo ""
 echo "📋 Copying .next to base dist directory for Railway..."
 mkdir -p "$BASE_DIR/dist"
+echo "Created base dist directory at: $BASE_DIR/dist"
 cp -r "$BASE_DIR/client/.next" "$BASE_DIR/dist/"
+echo "Copy complete, verifying..."
+ls -la "$BASE_DIR/dist/" | head -20
 
 if [ -d "$BASE_DIR/dist/.next" ]; then
   echo "✓ .next copied successfully to base dist/"
+  echo "Base dist/.next contents:"
+  ls -la "$BASE_DIR/dist/.next" | head -10
 else
   echo "⚠️  Warning: .next copy to base dist failed"
+  echo "Base dist contents:"
+  ls -la "$BASE_DIR/dist/" || echo "Could not list base dist"
 fi
 
 # Copy public directory if it exists
