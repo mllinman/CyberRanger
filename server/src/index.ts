@@ -24,19 +24,28 @@ dotenv.config()
 const dev = process.env.NODE_ENV !== 'production'
 
 // Path resolution logic
-// When running from /app/dist, __dirname is /app/dist
-// The .next directory is copied to /app/dist/ during build
+// In Railway deployments, the directory structure can vary:
+// - Build creates .next at /app/server/dist/.next
+// - Runtime might access it from /app/dist/.next (if Railway maps server to /app)
+// - Or from current working directory
 const potentialPaths = [
-  __dirname,                            // dist directory itself: /app/dist
-  path.join(__dirname, '..'),           // Server root: /app (Target location for .next)
-  path.join(__dirname, '../..'),        // Parent of server: /home/runner/work/CyberRanger/CyberRanger (local dev)
-  path.join(__dirname, '../../client'), // Local structure: client directory (local dev)
-  path.join(__dirname, '../client'),    // Flattened deployment structure
-  '/app',                               // Absolute path to server dir in Railway
-  path.resolve(__dirname, '..', '..', 'client'), // Resolved path to client
+  __dirname,                             // dist directory itself (e.g., /app/dist or /app/server/dist)
+  process.cwd(),                         // Current working directory
+  path.join(process.cwd(), 'dist'),      // dist relative to cwd
+  path.join(__dirname, '..'),            // Parent of dist (e.g., /app or /app/server)
+  path.join(__dirname, '../..'),         // Grandparent of dist (e.g., / or /app)
+  path.join(__dirname, '../../client'),  // Client directory in local dev
+  path.join(__dirname, '../client'),     // Client directory if flattened
+  '/app',                                // Absolute Railway path
+  '/app/server',                         // Absolute server path  
+  '/app/server/dist',                    // Absolute dist path
+  path.resolve(__dirname, '..', '..', 'client'), // Resolved client path
 ]
 
 console.log('🔍 Searching for client directory...')
+console.log(`  __dirname: ${__dirname}`)
+console.log(`  process.cwd(): ${process.cwd()}`)
+console.log(`  NODE_ENV: ${process.env.NODE_ENV}`)
 potentialPaths.forEach(p => {
   const hasNextBuild = fs.existsSync(path.join(p, '.next'))
   console.log(`  Checking: ${p} - exists: ${fs.existsSync(p)}, has .next: ${hasNextBuild}`)
