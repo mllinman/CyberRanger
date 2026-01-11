@@ -1,9 +1,6 @@
 {
   "$schema": "https://schema.railpack.com/railpack.schema.json",
   "steps": {
-    "install": {
-      "commands": ["npm run install:all"]
-    },
     "build": {
       "commands": ["chmod +x ./build-railway.sh", "bash ./build-railway.sh"]
     }
