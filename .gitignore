@@ -6,6 +6,7 @@ client/out/
 server/dist/
 server/.next/
 server/test_scenario/
+dist/
 
 # TypeScript build info
 *.tsbuildinfo
