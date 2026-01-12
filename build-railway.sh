@@ -25,13 +25,11 @@ fi
 echo ""
 echo "📦 Building Client..."
 cd "$BASE_DIR/client"
-# Install client dependencies if node_modules doesn't exist
-if [ ! -d "node_modules" ]; then
-  echo "Installing client dependencies..."
-  if ! npm install; then
-    echo "❌ Failed to install client dependencies"
-    exit 1
-  fi
+# Always install client dependencies in Railway environment
+echo "Installing client dependencies..."
+if ! npm install; then
+  echo "❌ Failed to install client dependencies"
+  exit 1
 fi
 if ! npm run build; then
   echo "❌ Failed to build client"
@@ -53,13 +51,11 @@ fi
 echo ""
 echo "🔧 Building Server..."
 cd "$BASE_DIR/server"
-# Install server dependencies if node_modules doesn't exist
-if [ ! -d "node_modules" ]; then
-  echo "Installing server dependencies..."
-  if ! npm install; then
-    echo "❌ Failed to install server dependencies"
-    exit 1
-  fi
+# Always install server dependencies in Railway environment
+echo "Installing server dependencies..."
+if ! npm install; then
+  echo "❌ Failed to install server dependencies"
+  exit 1
 fi
 if ! npm run build; then
   echo "❌ Failed to build server"
