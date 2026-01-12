@@ -12,12 +12,31 @@ echo "🚀 Starting CyberStore Build Process"
 echo "========================================"
 echo "Base directory: $BASE_DIR"
 
+# Install root dependencies first
+echo ""
+echo "📦 Installing root dependencies..."
+cd "$BASE_DIR"
+if ! npm install; then
+  echo "❌ Failed to install root dependencies"
+  exit 1
+fi
+
 # Build Client
 echo ""
 echo "📦 Building Client..."
 cd "$BASE_DIR/client"
-# Dependencies already installed by nixpacks, just build
-npm run build
+# Install client dependencies if node_modules doesn't exist
+if [ ! -d "node_modules" ]; then
+  echo "Installing client dependencies..."
+  if ! npm install; then
+    echo "❌ Failed to install client dependencies"
+    exit 1
+  fi
+fi
+if ! npm run build; then
+  echo "❌ Failed to build client"
+  exit 1
+fi
 
 echo "=== CLIENT BUILD COMPLETE ==="
 ls -la . | head -20
@@ -34,8 +53,18 @@ fi
 echo ""
 echo "🔧 Building Server..."
 cd "$BASE_DIR/server"
-# Dependencies already installed by nixpacks, just build
-npm run build
+# Install server dependencies if node_modules doesn't exist
+if [ ! -d "node_modules" ]; then
+  echo "Installing server dependencies..."
+  if ! npm install; then
+    echo "❌ Failed to install server dependencies"
+    exit 1
+  fi
+fi
+if ! npm run build; then
+  echo "❌ Failed to build server"
+  exit 1
+fi
 
 echo "=== SERVER BUILD COMPLETE ==="
 ls -la dist | head -20
