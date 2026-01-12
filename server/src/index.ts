@@ -93,7 +93,28 @@ let isReady = false
 let dbConnected = false
 
 // Security middleware
-app.use(helmet())
+// Configure helmet to allow Railway healthcheck requests
+app.use(helmet({
+  // Railway healthchecks come from healthcheck.railway.app
+  // Allow this by not restricting the Host header
+  hsts: {
+    maxAge: 31536000,
+    includeSubDomains: true,
+    preload: true
+  }
+}))
+
+// Middleware to allow Railway healthcheck hostname
+// Railway uses healthcheck.railway.app as the hostname for healthcheck requests
+app.use((req, res, next) => {
+  const host = req.get('host')
+  // Allow Railway healthcheck hostname
+  if (host === 'healthcheck.railway.app' || req.path === '/api/health') {
+    // Skip any hostname validation for healthcheck requests
+    return next()
+  }
+  next()
+})
 
 // CORS configuration - Allow multiple origins for deployment
 const allowedOrigins = [
@@ -101,18 +122,20 @@ const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:3001',
   'https://*.railway.app',
-  'https://*.up.railway.app'
+  'https://*.up.railway.app',
+  'healthcheck.railway.app'
 ].filter(Boolean)
 
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow requests with no origin (like mobile apps, curl, etc)
+    // Allow requests with no origin (like mobile apps, curl, healthchecks, etc)
     if (!origin) return callback(null, true)
 
     // Check if origin is in allowed list or matches Railway pattern
     if (allowedOrigins.some(allowed =>
       allowed && (allowed === origin ||
-        (allowed.includes('*') && origin.includes('railway.app')))
+        (allowed.includes('*') && origin.includes('railway.app')) ||
+        allowed === 'healthcheck.railway.app')
     )) {
       callback(null, true)
     } else {
@@ -174,7 +197,16 @@ app.use('/api/logs', logRoutes)
 // app.get('/', (req, res) => { ... })
 
 // Health check endpoint - responds immediately even during initialization
+// Railway uses healthcheck.railway.app as the hostname for healthcheck requests
 app.get('/api/health', (req, res) => {
+  const host = req.get('host')
+  const origin = req.get('origin')
+  
+  // Log Railway healthcheck requests for debugging
+  if (host === 'healthcheck.railway.app') {
+    console.log('✓ Railway healthcheck request received')
+  }
+  
   const dbStatus = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected'
   
   // Always return 200 OK so Railway knows the server is up
@@ -186,7 +218,8 @@ app.get('/api/health', (req, res) => {
     timestamp: new Date().toISOString(),
     environment: process.env.NODE_ENV || 'development',
     database: dbStatus,
-    stripe: process.env.STRIPE_SECRET_KEY ? 'configured' : 'not configured'
+    stripe: process.env.STRIPE_SECRET_KEY ? 'configured' : 'not configured',
+    port: PORT
   })
 })
 
