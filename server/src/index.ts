@@ -92,11 +92,9 @@ const PORT = process.env.PORT || 8000
 let isReady = false
 let dbConnected = false
 
-// Security middleware
-// Configure helmet to allow Railway healthcheck requests
+// Security middleware - Configure helmet with appropriate settings
 app.use(helmet({
-  // Railway healthchecks come from healthcheck.railway.app
-  // Allow this by not restricting the Host header
+  // Configure HSTS for production security
   hsts: {
     maxAge: 31536000,
     includeSubDomains: true,
