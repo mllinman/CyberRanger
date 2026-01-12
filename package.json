@@ -9,7 +9,7 @@
     "server:dev": "cd server && npm run dev",
     "client:build": "cd client && npm run build",
     "server:build": "cd server && npm run build",
-    "build": "npm run client:build && npm run server:build && cd server && mkdir -p dist && cp -r ../client/.next dist/ && (test -d ../client/public && cp -r ../client/public dist/ || true)",
+    "build": "bash ./build-railway.sh",
     "start": "cd server && npm start",
     "install:all": "npm install && cd client && npm install && cd ../server && npm install",
     "test": "npm run client:test && npm run server:test",
