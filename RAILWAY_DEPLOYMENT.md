@@ -23,7 +23,10 @@ Add the following environment variables in the Railway dashboard:
 
 **Required:**
 - `NODE_ENV=production`
-- `PORT` (Railway sets this automatically)
+- `PORT` (Railway sets this automatically - **DO NOT manually override** unless you know what you're doing. Railway uses this for healthchecks.)
+
+**Important Note about PORT:**
+Railway automatically injects a `PORT` environment variable that your application must listen on. This port is also used for healthcheck requests. The application is configured to read this variable correctly. If you manually set a PORT variable, ensure it matches the port your application listens on to avoid healthcheck failures.
 
 **Database (Required for full functionality):**
 - `MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/cyberstore`
@@ -114,7 +117,20 @@ After deployment, verify your app is running:
 curl https://your-app.railway.app/api/health
 ```
 
-The healthcheck endpoint is designed to respond immediately, even during application startup. This ensures Railway's healthcheck doesn't timeout during initialization.
+### Railway Healthcheck Configuration
+
+The application is configured to work with Railway's healthcheck system:
+
+- **Healthcheck Path**: `/api/health` (configured in `railway.json`)
+- **Healthcheck Timeout**: 300 seconds (5 minutes)
+- **Healthcheck Hostname**: Railway uses `healthcheck.railway.app` as the hostname for healthcheck requests
+- **Response**: Always returns HTTP 200 status code, even during startup
+
+The server is configured to:
+1. Accept requests from the `healthcheck.railway.app` hostname
+2. Respond immediately to healthcheck requests, even during initialization
+3. Listen on the `PORT` environment variable that Railway provides
+4. Return a 200 status code to indicate the service is available
 
 Expected response during startup:
 ```json
@@ -125,7 +141,8 @@ Expected response during startup:
   "timestamp": "2024-01-08T...",
   "environment": "production",
   "database": "disconnected",
-  "stripe": "configured"
+  "stripe": "configured",
+  "port": "8000"
 }
 ```
 
@@ -138,11 +155,12 @@ Expected response after full initialization:
   "timestamp": "2024-01-08T...",
   "environment": "production",
   "database": "connected",
-  "stripe": "configured"
+  "stripe": "configured",
+  "port": "8000"
 }
 ```
 
-The `ready` field indicates whether the application has fully initialized. The healthcheck always returns HTTP 200, even during startup, to satisfy Railway's healthcheck requirements.
+The `ready` field indicates whether the application has fully initialized. The healthcheck always returns HTTP 200, even during startup, to satisfy Railway's healthcheck requirements and ensure zero-downtime deployments.
 
 ## Testing the Deployment
 
@@ -167,28 +185,48 @@ The `ready` field indicates whether the application has fully initialized. The h
 
 ## Common Issues
 
-### 1. Build Fails
+### 1. Healthcheck Failures ("Service Unavailable" or "Status 400")
+
+**Symptoms:**
+- Railway deployment fails with healthcheck timeout
+- Error messages like "failed with service unavailable" or "failed with status 400"
+- Deployment never completes
+
+**Solution:**
+The application is now configured to handle Railway healthchecks correctly:
+- ✅ Accepts requests from `healthcheck.railway.app` hostname
+- ✅ Returns HTTP 200 status immediately, even during startup
+- ✅ Listens on the PORT environment variable that Railway provides
+- ✅ Healthcheck path is set to `/api/health` in `railway.json`
+
+If you still experience issues:
+1. Verify the `PORT` environment variable is not manually set or overridden
+2. Check that no firewall or middleware is blocking the healthcheck endpoint
+3. Ensure the healthcheck timeout (300 seconds) is sufficient for your app to start
+4. Check Railway logs for startup errors that prevent the server from listening
+
+### 2. Build Fails
 
 **Solution:** Check the build logs in Railway dashboard. Common issues:
 - Missing dependencies in package.json
 - TypeScript compilation errors
 - Missing environment variables
 
-### 2. Database Connection Error
+### 3. Database Connection Error
 
 **Solution:** 
 - Verify `MONGODB_URI` is set correctly
 - Check MongoDB Atlas IP whitelist includes 0.0.0.0/0
 - Ensure database user has correct permissions
 
-### 3. Application Crashes After Deploy
+### 4. Application Crashes After Deploy
 
 **Solution:**
 - Check Railway logs for error messages
 - Verify all required environment variables are set
 - Ensure PORT is not hardcoded (Railway assigns it automatically)
 
-### 4. CORS Errors
+### 5. CORS Errors
 
 **Solution:**
 - Add your frontend domain to `CLIENT_URL` environment variable

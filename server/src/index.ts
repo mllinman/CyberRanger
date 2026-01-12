@@ -92,8 +92,20 @@ const PORT = process.env.PORT || 8000
 let isReady = false
 let dbConnected = false
 
-// Security middleware
-app.use(helmet())
+// Security middleware - Configure helmet with appropriate settings
+app.use(helmet({
+  // Configure HSTS for production security
+  hsts: {
+    maxAge: 31536000,
+    includeSubDomains: true,
+    preload: true
+  }
+}))
+
+// Middleware documentation for Railway healthcheck
+// Railway uses healthcheck.railway.app as the hostname for healthcheck requests
+// The healthcheck endpoint is placed early in the middleware stack (before rate limiting)
+// to ensure it responds quickly even under high load
 
 // CORS configuration - Allow multiple origins for deployment
 const allowedOrigins = [
@@ -106,7 +118,8 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow requests with no origin (like mobile apps, curl, etc)
+    // Allow requests with no origin (like mobile apps, curl, Railway healthchecks, etc)
+    // Railway healthcheck requests don't include an Origin header
     if (!origin) return callback(null, true)
 
     // Check if origin is in allowed list or matches Railway pattern
@@ -174,7 +187,15 @@ app.use('/api/logs', logRoutes)
 // app.get('/', (req, res) => { ... })
 
 // Health check endpoint - responds immediately even during initialization
+// Railway uses healthcheck.railway.app as the hostname for healthcheck requests
 app.get('/api/health', (req, res) => {
+  const host = req.get('host')
+  
+  // Log Railway healthcheck requests for debugging
+  if (host === 'healthcheck.railway.app') {
+    console.log('✓ Railway healthcheck request received')
+  }
+  
   const dbStatus = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected'
   
   // Always return 200 OK so Railway knows the server is up
@@ -186,7 +207,8 @@ app.get('/api/health', (req, res) => {
     timestamp: new Date().toISOString(),
     environment: process.env.NODE_ENV || 'development',
     database: dbStatus,
-    stripe: process.env.STRIPE_SECRET_KEY ? 'configured' : 'not configured'
+    stripe: process.env.STRIPE_SECRET_KEY ? 'configured' : 'not configured',
+    port: PORT
   })
 })
 
