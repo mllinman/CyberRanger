@@ -1,0 +1,11 @@
+[phases.setup]
+nixPkgs = ["nodejs-18_x", "npm-9_x", "bash"]
+
+[phases.install]
+cmds = ["npm install"]
+
+[phases.build]
+cmds = ["bash ./build-railway.sh"]
+
+[start]
+cmd = "node server/dist/index.js"
