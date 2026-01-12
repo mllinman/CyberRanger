@@ -16,7 +16,10 @@ echo "Base directory: $BASE_DIR"
 echo ""
 echo "📦 Installing root dependencies..."
 cd "$BASE_DIR"
-npm install
+if ! npm install; then
+  echo "❌ Failed to install root dependencies"
+  exit 1
+fi
 
 # Build Client
 echo ""
@@ -25,9 +28,15 @@ cd "$BASE_DIR/client"
 # Install client dependencies if node_modules doesn't exist
 if [ ! -d "node_modules" ]; then
   echo "Installing client dependencies..."
-  npm install
+  if ! npm install; then
+    echo "❌ Failed to install client dependencies"
+    exit 1
+  fi
 fi
-npm run build
+if ! npm run build; then
+  echo "❌ Failed to build client"
+  exit 1
+fi
 
 echo "=== CLIENT BUILD COMPLETE ==="
 ls -la . | head -20
@@ -47,9 +56,15 @@ cd "$BASE_DIR/server"
 # Install server dependencies if node_modules doesn't exist
 if [ ! -d "node_modules" ]; then
   echo "Installing server dependencies..."
-  npm install
+  if ! npm install; then
+    echo "❌ Failed to install server dependencies"
+    exit 1
+  fi
 fi
-npm run build
+if ! npm run build; then
+  echo "❌ Failed to build server"
+  exit 1
+fi
 
 echo "=== SERVER BUILD COMPLETE ==="
 ls -la dist | head -20
