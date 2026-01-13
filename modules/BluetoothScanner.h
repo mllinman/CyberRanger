@@ -23,10 +23,13 @@ public:
     void startScan();
     void stopScan();
     QVector<BluetoothDevice> getDevices() const;
+    bool isCurrentlyScanning() const { return isScanning; }
 
 signals:
     void deviceDiscovered(const BluetoothDevice &device);
     void scanCompleted();
+    void scanStarted();
+    void scanStopped();
 
 private slots:
     void scanStep();
@@ -34,7 +37,13 @@ private slots:
 private:
     QTimer *scanTimer;
     QVector<BluetoothDevice> devices;
+    bool isScanning;
+    
     void performScan();
+    void performLinuxScan();
+    void performWindowsScan();
+    void performSimulatedScan();
+    QString classifyDevice(const QString& name);
 };
 
 #endif // BLUETOOTHSCANNER_H
