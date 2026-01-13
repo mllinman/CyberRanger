@@ -17,46 +17,30 @@ dotenv.config()
 
 const dev = process.env.NODE_ENV !== 'production'
 
-// Path resolution logic
-const potentialPaths = [
-  __dirname,                             // dist directory itself (e.g., /app/server/dist)
-  process.cwd(),                         // Current working directory (/app)
-  path.join(process.cwd(), 'dist'),      // dist relative to cwd
-  path.join(__dirname, '..'),            // Parent of dist (e.g., /app/server)
-  path.join(__dirname, '../..'),         // Grandparent of dist (e.g., /app)
-  path.join(__dirname, '../../client'),  // Client directory in local dev
-  path.join(__dirname, '../client'),     // Client directory if flattened
-  '/app/dist',                           // Legacy: Absolute Railway dist path
-  '/app',                                // Absolute Railway path
-  '/app/server',                         // Absolute server path  
-  '/app/server/dist',                    // Absolute dist path
-  path.resolve(__dirname, '..', '..', 'client'), // Resolved client path for local dev
-]
+// Deterministic Path Resolution
+// In production (Railway), the app runs from /app/server/dist/index.js
+// The .next folder is copied to /app/server/dist/.next by the build script.
+const currentDir = __dirname
+const clientDirProd = path.join(currentDir, '.next')
+const clientDirDev = path.join(__dirname, '../../client') // Adjust if needed based on local structure
 
-console.log('🔍 Searching for client directory...')
-let clientDir: string | undefined = potentialPaths.find(p => {
-  if (!fs.existsSync(p)) return false
-  if (!dev && fs.existsSync(path.join(p, '.next'))) return true
-  if (dev) {
-    const pkgPath = path.join(p, 'package.json')
-    if (fs.existsSync(pkgPath)) {
-      try {
-        const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'))
-        return pkg.dependencies?.next || pkg.devDependencies?.next
-      } catch {
-        return false
-      }
-    }
+let clientDir = currentDir
+if (dev) {
+  clientDir = clientDirDev
+  console.log(`🔧 [DEV] Using client directory: ${clientDir}`)
+} else {
+  // Production: Check if .next exists in current dir
+  if (fs.existsSync(clientDirProd)) {
+    clientDir = currentDir
+    console.log(`✅ [PROD] Found .next in ${clientDir}`)
+  } else {
+    console.error(`❌ [PROD] CRITICAL: .next directory NOT found in ${currentDir}`)
+    console.error('Contents of current directory:', fs.readdirSync(currentDir))
+    // Fallback to current dir anyway to let Next try its own resolution or fail loudly
+    clientDir = currentDir
   }
-  return false
-})
-
-if (!clientDir) {
-  console.warn('⚠️  Could not find .next build directory! UI may fail to load.')
-  clientDir = potentialPaths.length > 0 ? potentialPaths[0] : process.cwd()
 }
 
-console.log(`✅ Selected client dir: ${clientDir}`)
 const nextApp = next({ dev, dir: clientDir })
 const handle = nextApp.getRequestHandler()
 
@@ -65,6 +49,12 @@ const PORT = process.env.PORT || 8000
 
 // Trust proxy for Railway/Load Balancers
 app.set('trust proxy', 1)
+
+// DEBUG: Log all requests
+app.use((req, res, next) => {
+  console.log(`📥 [${req.method}] ${req.url}`)
+  next()
+})
 
 // Security middleware
 app.use(helmet({
