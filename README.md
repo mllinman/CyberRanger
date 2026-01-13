@@ -12,9 +12,9 @@
 [![Security](https://img.shields.io/badge/Security-Authorized%20Use%20Only-red.svg)](SECURITY.md)
 [![Contributors](https://img.shields.io/badge/Contributors-Welcome-purple.svg)](CONTRIBUTING.md)
 
-### *Professional Network Security Scanner & Penetration Testing Tool*
+### *Professional Network Security Scanner & Penetration Testing Platform*
 
-*Empowering ethical hackers and security professionals with comprehensive network analysis capabilities*
+*Empowering ethical hackers and security professionals with comprehensive red team capabilities*
 
 </div>
 
@@ -38,16 +38,16 @@
 
 ## 🔍 Overview
 
-CyberRanger is a comprehensive, cross-platform network security scanner designed exclusively for **authorized penetration testing and security research**. Built with modern Qt6 framework, it provides an intuitive dark-themed interface with modular scanner architecture for Wi-Fi networks, Bluetooth devices, and network topology analysis.
+CyberRanger is a comprehensive, professional-grade penetration testing platform designed exclusively for **authorized security assessments and ethical hacking**. Built as a modern web application with Next.js frontend and Express backend, it provides an intuitive interface with powerful red team capabilities including reconnaissance, exploitation, payload generation, and advanced network scanning.
 
 ### 🎯 Key Highlights
 
 - ⚡ **Real-time Scanning** - Live network analysis with instant feedback
-- 🌐 **Cross-Platform** - Native support for Linux and Windows environments  
+- 🌐 **Web-Based Platform** - Accessible from any modern web browser
 - 🎨 **Professional UI** - Modern dark theme optimized for security professionals
 - 🔒 **Ethical Focus** - Built-in legal compliance and authorization verification
-- 📊 **Comprehensive Reports** - Detailed analysis with actionable insights
-- 🧩 **Modular Design** - Extensible architecture for custom scanner modules
+- 📊 **Comprehensive Tools** - Full red team toolkit from reconnaissance to exploitation
+- 🧩 **Modular Design** - Extensible architecture for custom tools
 
 ## 🚨 **IMPORTANT LEGAL NOTICE**
 
@@ -65,7 +65,7 @@ CyberRanger is a comprehensive, cross-platform network security scanner designed
 <tr>
 <td width="50%">
 
-### 🔍 **Advanced Scanning Capabilities**
+### 🔍 **Advanced Scanning & Reconnaissance**
 - 📡 **Wi-Fi Network Analysis**
   - WEP/WPA/WPA2/WPA3 encryption detection
   - Signal strength and channel analysis  
@@ -75,9 +75,40 @@ CyberRanger is a comprehensive, cross-platform network security scanner designed
   - MAC address collection and analysis
   - Connection status monitoring
 - 🌐 **Network Topology Mapping**
-  - Port scanning with service detection
-  - Host discovery and OS fingerprinting
-  - Network infrastructure analysis
+  - Enhanced port scanning with 40+ service identifications
+  - Host discovery with device type detection
+  - OS fingerprinting and vendor identification
+  - Virtual machine and IoT device recognition
+- 🔎 **DNS Enumeration**
+  - A, AAAA, MX, TXT, NS, CNAME record discovery
+  - Subdomain discovery with 40+ common patterns
+  - Comprehensive domain intelligence gathering
+- 🌍 **HTTP Analysis**
+  - Security header assessment
+  - Technology stack detection
+  - Banner grabbing and service identification
+
+### 🛡️ **Exploitation & Vulnerability Testing**
+- 🔓 **Web Application Security**
+  - SQL injection automated testing (8+ payloads)
+  - XSS vulnerability detection (multiple vectors)
+  - Directory and file brute force discovery
+  - Security misconfiguration identification
+- 🔑 **Password & Hash Attacks**
+  - Automatic hash type identification
+  - Dictionary-based hash cracking
+  - Support for MD5, SHA1, SHA256, SHA512
+- 💉 **Payload Generation Suite**
+  - Reverse shell generators (Bash, Python, PHP, PowerShell, Netcat)
+  - SQL injection payload library
+  - XSS payload collection
+  - Command injection vectors
+  - File upload bypass techniques
+- 🔐 **Encoding & Obfuscation**
+  - Base64, URL, Hex encoding
+  - HTML entity encoding
+  - Unicode escape sequences
+  - Double encoding for filter bypass
 
 ### 🛡️ **Security & Compliance**
 - ⚖️ **Legal Compliance Framework**
@@ -99,26 +130,31 @@ CyberRanger is a comprehensive, cross-platform network security scanner designed
   - Customizable interface elements
 - 📊 **Intuitive Dashboard**
   - Real-time scanning status and progress
-  - Centralized results management
+  - Organized tool categories (Scan, Recon, Exploit, Payloads)
   - Quick-access module launcher
-- 🖥️ **Cross-Platform Compatibility**
-  - Native Linux and Windows support
+- 🖥️ **Web-Based Access**
+  - Accessible from any modern web browser
   - Responsive design for various screen sizes
-  - Touch-friendly interface elements
+  - No installation required for client access
 
 ### 🔧 **Technical Excellence**
 - ⚡ **High-Performance Architecture**
-  - Multi-threaded scanning engine
-  - Optimized memory management
-  - Efficient resource utilization
+  - Node.js/Express backend for fast API responses
+  - Next.js frontend with React 19
+  - Asynchronous scanning operations
 - 🧩 **Extensible Design**
-  - Plugin-ready modular architecture
-  - Custom scanner module support
-  - API-driven development framework
-- 🛠️ **Professional Build System**
-  - CMake-based cross-platform compilation
-  - Automated dependency management
-  - Continuous integration ready
+  - RESTful API architecture
+  - Modular controller structure
+  - Easy to add custom tools
+- 🛠️ **Modern Tech Stack**
+  - TypeScript for type safety
+  - Radix UI components
+  - Tailwind CSS for styling
+- 🔒 **Security Hardening**
+  - SSRF protection on all external requests
+  - Input validation and sanitization
+  - Response size limits
+  - Internal network access prevention
 
 </td>
 </tr>
@@ -128,143 +164,85 @@ CyberRanger is a comprehensive, cross-platform network security scanner designed
 
 ### 📋 Prerequisites
 
-<details>
-<summary><strong>🐧 Linux (Ubuntu/Debian)</strong></summary>
+**Required:**
+- Node.js 18+ and npm
+- Git
 
-```bash
-# Update package repositories
-sudo apt update
+**Recommended:**
+- Modern web browser (Chrome, Firefox, Edge)
+- 4GB+ RAM
+- Internet connection for reconnaissance tools
 
-# Install Qt6 development dependencies
-sudo apt install qt6-base-dev qt6-base-dev-tools cmake build-essential
+### ⬇️ Installation
 
-# Install additional development tools
-sudo apt install git curl wget
-
-# Verify Qt6 installation
-qmake6 --version
-```
-
-**Supported Distributions:**
-- Ubuntu 20.04+ (LTS recommended)
-- Debian 11+
-- Fedora 35+
-- openSUSE Leap 15.4+
-
-</details>
-
-<details>
-<summary><strong>🪟 Windows</strong></summary>
-
-**Required Components:**
-1. **Qt 6.4+** - Download from [qt.io](https://www.qt.io/download)
-   - Select "Qt Online Installer"
-   - Choose Qt 6.4+ with MinGW or MSVC compiler
-2. **CMake 3.16+** - Download from [cmake.org](https://cmake.org/download/)
-3. **Git for Windows** - Download from [git-scm.com](https://git-scm.com/)
-4. **Visual Studio Build Tools** (if using MSVC)
-   - Download from [Microsoft Build Tools](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2022)
-
-**Environment Setup:**
-```cmd
-REM Add Qt6 and CMake to PATH
-set PATH=%PATH%;C:\Qt\6.4.2\mingw_64\bin
-set PATH=%PATH%;C:\Program Files\CMake\bin
-```
-
-</details>
-
-### ⬇️ Installation Options
-
-#### Option 1: 📦 Pre-built Releases *(Recommended)*
-
-<details>
-<summary><strong>🐧 Linux Installation</strong></summary>
-
-```bash
-# Download latest release
-wget https://github.com/mllinman/CyberRanger/releases/latest/download/CyberRanger_Linux_x64.tar.gz
-
-# Extract archive
-tar -xzf CyberRanger_Linux_x64.tar.gz
-
-# Make executable and run
-chmod +x CyberRanger
-./CyberRanger
-
-# Optional: Install system-wide
-sudo cp CyberRanger /usr/local/bin/
-sudo cp assets/app_icon.png /usr/share/pixmaps/cyberranger.png
-```
-
-</details>
-
-<details>
-<summary><strong>🪟 Windows Installation</strong></summary>
-
-1. Download `CyberRanger_Windows_v1.0.0.zip` from [releases](https://github.com/mllinman/CyberRanger/releases)
-2. Extract to desired location (e.g., `C:\Program Files\CyberRanger\`)
-3. Run `CyberRanger.exe` as Administrator for full scanning capabilities
-4. Add to PATH for command-line access (optional)
-
-</details>
-
-#### Option 2: 🔨 Build from Source
-
-<details>
-<summary><strong>🐧 Linux Build Process</strong></summary>
+#### Option 1: 🔨 Run from Source (Recommended for Development)
 
 ```bash
 # Clone repository
 git clone https://github.com/mllinman/CyberRanger.git
 cd CyberRanger
 
-# Verify dependencies
-./scripts/check-dependencies.sh  # Optional verification script
+# Install root dependencies
+npm install
 
-# Build application
-chmod +x build_linux.sh
-./build_linux.sh
+# Install server dependencies
+cd server
+npm install
 
-# Run CyberRanger
-./release/CyberRanger
+# Install client dependencies
+cd ../client
+npm install
 
-# Optional: Run with debug output
-QT_LOGGING_RULES="*=true" ./release/CyberRanger
+# Return to root
+cd ..
 ```
 
-</details>
+#### Option 2: 📦 Quick Setup Script
 
-<details>
-<summary><strong>🪟 Windows Build Process</strong></summary>
-
-```cmd
-REM Clone repository
+```bash
+# Clone and install all dependencies
 git clone https://github.com/mllinman/CyberRanger.git
 cd CyberRanger
-
-REM Build application
-build_windows.bat
-
-REM Deploy Qt dependencies
-deploy_windows.bat
-
-REM Create installer (optional)
-create_installer.bat
-
-REM Run application
-cd release
-CyberRanger.exe
+npm run install:all
 ```
 
-</details>
+### 🚀 Running CyberRanger
 
-### 🚀 First Launch
+#### Development Mode (Both Client and Server)
 
-1. **Accept Legal Disclaimer** - Review and acknowledge terms of authorized use
-2. **Verify Network Permissions** - Ensure appropriate privileges for network scanning
-3. **Explore Dashboard** - Familiarize yourself with the interface and available modules
-4. **Run Initial Scan** - Start with the Wi-Fi scanner for a quick test
+```bash
+# From root directory - runs both client and server
+npm run dev
+```
+
+This starts:
+- **Client** at http://localhost:3000
+- **Server API** at http://localhost:8000
+
+#### Production Mode
+
+```bash
+# Build both client and server
+npm run build
+
+# Start production server (serves both API and frontend)
+npm start
+```
+
+The application will be available at http://localhost:8000
+
+### 🎯 First Launch
+
+1. **Open Browser** - Navigate to http://localhost:3000 (dev) or http://localhost:8000 (prod)
+2. **Review Legal Notice** - Acknowledge terms of authorized use
+3. **Explore Dashboard** - Familiarize yourself with available tools:
+   - 🌐 **Network Scanner** - Local device discovery
+   - 📡 **WiFi Scanner** - Wireless network analysis
+   - 📱 **Bluetooth Scanner** - Bluetooth device discovery
+   - 🔍 **Reconnaissance** - DNS, subdomain, tech stack detection
+   - 🐛 **Exploitation** - Vulnerability testing tools
+   - 💉 **Payloads** - Payload generation and encoding
+4. **Run Test Scan** - Start with network scanner on localhost
 
 > **⚠️ Important:** For comprehensive network scanning, run CyberRanger with elevated privileges (`sudo` on Linux, "Run as Administrator" on Windows)
 

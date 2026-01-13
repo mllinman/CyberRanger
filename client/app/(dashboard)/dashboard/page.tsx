@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { Wifi, Bluetooth, Network, AlertTriangle, Activity, RefreshCw, Search, Shield } from 'lucide-react'
+import { Wifi, Bluetooth, Network, AlertTriangle, Activity, RefreshCw, Search, Shield, Bug, Code, Globe } from 'lucide-react'
 import Link from 'next/link'
 import { NetworkScansTable } from '@/components/dashboard/network-scans-table'
 import { SecurityMetricsChart } from '@/components/dashboard/security-metrics-chart'
@@ -242,6 +242,24 @@ export default function DashboardPage() {
                     <Button className="w-full justify-start" variant="outline">
                       <Bluetooth className="mr-2 h-4 w-4" />
                       Scan Bluetooth
+                    </Button>
+                  </Link>
+                  <Link href="/dashboard/recon">
+                    <Button className="w-full justify-start" variant="outline">
+                      <Globe className="mr-2 h-4 w-4" />
+                      Reconnaissance
+                    </Button>
+                  </Link>
+                  <Link href="/dashboard/exploit">
+                    <Button className="w-full justify-start" variant="outline">
+                      <Bug className="mr-2 h-4 w-4" />
+                      Exploitation Tools
+                    </Button>
+                  </Link>
+                  <Link href="/dashboard/payloads">
+                    <Button className="w-full justify-start" variant="outline">
+                      <Code className="mr-2 h-4 w-4" />
+                      Payload Generator
                     </Button>
                   </Link>
                 </CardContent>

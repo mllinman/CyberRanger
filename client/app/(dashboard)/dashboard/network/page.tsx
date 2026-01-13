@@ -22,7 +22,7 @@ export default function NetworkScanner() {
     // Port scan state
     const [targetIP, setTargetIP] = useState('127.0.0.1')
     const [portScanning, setPortScanning] = useState(false)
-    const [openPorts, setOpenPorts] = useState<number[]>([])
+    const [openPorts, setOpenPorts] = useState<any[]>([])
 
     const scanNetwork = async () => {
         setScanning(true)
@@ -54,8 +54,8 @@ export default function NetworkScanner() {
             })
             const data = await res.json()
             if (data.success) {
-                setOpenPorts(data.openPorts)
-                toast.success(`Found ${data.openPorts.length} open ports`)
+                setOpenPorts(data.results || [])
+                toast.success(`Found ${data.openPorts} open ports`)
             } else {
                 toast.error(data.error || 'Port scan failed')
             }
@@ -89,7 +89,7 @@ export default function NetworkScanner() {
                                     <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
                                         <th className="h-12 px-4 align-middle font-medium text-muted-foreground">IP Address</th>
                                         <th className="h-12 px-4 align-middle font-medium text-muted-foreground">MAC Address</th>
-                                        <th className="h-12 px-4 align-middle font-medium text-muted-foreground">Type</th>
+                                        <th className="h-12 px-4 align-middle font-medium text-muted-foreground">Device Type</th>
                                         <th className="h-12 px-4 align-middle font-medium text-muted-foreground">Status</th>
                                     </tr>
                                 </thead>
@@ -103,7 +103,9 @@ export default function NetworkScanner() {
                                         <tr key={i} className="border-b transition-colors hover:bg-muted/50">
                                             <td className="p-4 align-middle font-medium">{host.ip}</td>
                                             <td className="p-4 align-middle font-mono text-xs">{host.mac}</td>
-                                            <td className="p-4 align-middle">{host.type}</td>
+                                            <td className="p-4 align-middle">
+                                                <span className="text-sm">{host.deviceType || host.type}</span>
+                                            </td>
                                             <td className="p-4 align-middle">
                                                 <span className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-green-500/15 text-green-500">
                                                     {host.status}
@@ -150,12 +152,26 @@ export default function NetworkScanner() {
 
                         {openPorts.length > 0 && (
                             <div className="mt-6">
-                                <h3 className="text-sm font-medium mb-2">Open Ports Found:</h3>
-                                <div className="flex flex-wrap gap-2">
-                                    {openPorts.map(port => (
-                                        <div key={port} className="flex items-center gap-2 bg-secondary px-3 py-1 rounded-md">
+                                <h3 className="text-sm font-medium mb-2">Open Ports Found: {openPorts.length}</h3>
+                                <div className="space-y-2">
+                                    {openPorts.map((result: any) => (
+                                        <div key={result.port} className="flex items-center gap-3 bg-secondary px-4 py-3 rounded-md">
                                             <Server className="h-4 w-4 text-primary" />
-                                            <span className="font-mono text-sm">{port}</span>
+                                            <div className="flex-1">
+                                                <span className="font-mono font-semibold">Port {result.port}</span>
+                                                <span className="mx-2 text-muted-foreground">•</span>
+                                                <span className="text-sm">{result.service}</span>
+                                            </div>
+                                            <div className="text-right">
+                                                <span className="text-xs bg-green-500/10 text-green-500 px-2 py-1 rounded">
+                                                    {result.status}
+                                                </span>
+                                                {result.responseTime && (
+                                                    <p className="text-xs text-muted-foreground mt-1">
+                                                        {result.responseTime}
+                                                    </p>
+                                                )}
+                                            </div>
                                         </div>
                                     ))}
                                 </div>
