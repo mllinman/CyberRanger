@@ -122,7 +122,7 @@ app.all('*', (req, res) => {
 })
 
 const startServer = async () => {
-  const server = app.listen(PORT, () => {
+  const server = app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 CyberRanger Server listening on port ${PORT}`)
   })
 
