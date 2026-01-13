@@ -86,7 +86,9 @@ void WiFiScanner::performLinuxScan()
     
     QProcess process;
     // Use fixed command arguments - no user input to prevent command injection
-    process.start("nmcli", QStringList() << "-t" << "-f" 
+    // Command: nmcli -t -f SSID,BSSID,MODE,CHAN,FREQ,RATE,SIGNAL,SECURITY dev wifi list
+    process.start("nmcli", QStringList() 
+                  << "-t" << "-f" 
                   << "SSID,BSSID,MODE,CHAN,FREQ,RATE,SIGNAL,SECURITY" 
                   << "dev" << "wifi" << "list");
     
@@ -264,13 +266,19 @@ void WiFiScanner::performWindowsScan()
     Logger::info(QString("Found %1 WiFi networks via netsh").arg(networks.size()));
 }
 
+QString WiFiScanner::generateRandomMAC() {
+    // Helper function to generate a random MAC address
+    QStringList parts;
+    for (int i = 0; i < 6; ++i) {
+        parts << QString("%1").arg(QRandomGenerator::global()->bounded(256), 2, 16, QChar('0'));
+    }
+    return parts.join(':').toUpper();
+}
+
 void WiFiScanner::performSimulatedScan()
 {
     // Simulated WiFi network discovery for testing/demo
     static int count = 0;
-    
-    // Maximum simulated networks constant for easy configuration
-    const int MAX_SIMULATED_NETWORKS = 10;
     
     // Limit to configured maximum
     if (networks.size() >= MAX_SIMULATED_NETWORKS) {
@@ -287,14 +295,7 @@ void WiFiScanner::performSimulatedScan()
     
     int idx = count % commonSSIDs.size();
     network.ssid = QString("%1_%2").arg(commonSSIDs[idx]).arg(count + 1);
-    network.bssid = QString("%1:%2:%3:%4:%5:%6")
-        .arg(QRandomGenerator::global()->bounded(256), 2, 16, QChar('0'))
-        .arg(QRandomGenerator::global()->bounded(256), 2, 16, QChar('0'))
-        .arg(QRandomGenerator::global()->bounded(256), 2, 16, QChar('0'))
-        .arg(QRandomGenerator::global()->bounded(256), 2, 16, QChar('0'))
-        .arg(QRandomGenerator::global()->bounded(256), 2, 16, QChar('0'))
-        .arg(QRandomGenerator::global()->bounded(256), 2, 16, QChar('0'))
-        .toUpper();
+    network.bssid = generateRandomMAC();
     
     network.channel = (count % 11) + 1;
     network.signalStrength = -30 - (QRandomGenerator::global()->bounded(60));

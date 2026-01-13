@@ -30,6 +30,9 @@ public:
     QStringList scanNetworks(); // Returns list of SSIDs
     bool isCurrentlyScanning() const { return isScanning; }
     
+    // Configuration constants
+    static constexpr int MAX_SIMULATED_NETWORKS = 10;
+    
 signals:
     void networkDiscovered(const WiFiNetwork &network);
     void scanCompleted();
@@ -49,6 +52,7 @@ private:
     void performLinuxScan();
     void performWindowsScan();
     void performSimulatedScan();
+    QString generateRandomMAC();
 };
 
 #endif // WIFISCANNER_H
