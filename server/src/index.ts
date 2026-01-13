@@ -63,6 +63,9 @@ const handle = nextApp.getRequestHandler()
 const app = express()
 const PORT = process.env.PORT || 8000
 
+// Trust proxy for Railway/Load Balancers
+app.set('trust proxy', 1)
+
 // Security middleware
 app.use(helmet({
   hsts: {
@@ -84,7 +87,11 @@ const limiter = rateLimit({
   max: 500, // Higher limit for scanner tool
   message: 'Too many requests from this IP.'
 })
-app.use('/api/', limiter)
+// Apply rate limiting to API routes EXCEPT health check
+app.use('/api/', (req, res, next) => {
+  if (req.path === '/health') return next()
+  limiter(req, res, next)
+})
 
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' }))
