@@ -12,6 +12,8 @@ import fs from 'fs'
 
 // Import routes
 import scannerRoutes from './routes/scan'
+import reconRoutes from './routes/recon'
+import exploitRoutes from './routes/exploit'
 
 dotenv.config()
 
@@ -105,6 +107,8 @@ app.get('/api/health', (req, res) => {
 
 // Routes - API endpoints are registered before Next.js catch-all
 app.use('/api/scan', scannerRoutes)
+app.use('/api/recon', reconRoutes)
+app.use('/api/exploit', exploitRoutes)
 
 // Next.js handler for all remaining routes (non-API routes)
 // This must come AFTER API routes to avoid intercepting them
