@@ -106,13 +106,9 @@ app.get('/api/health', (req, res) => {
 // Routes - API endpoints are registered before Next.js catch-all
 app.use('/api/scan', scannerRoutes)
 
-// Next.js handler for non-API routes - this must come AFTER API routes but BEFORE server.listen()
-// Only handle non-API routes with Next.js
-app.all('*', (req, res, next) => {
-  // Skip API routes - they're already handled above
-  if (req.path.startsWith('/api/')) {
-    return res.status(404).json({ error: 'API endpoint not found' })
-  }
+// Next.js handler for all remaining routes (non-API routes)
+// This must come AFTER API routes to avoid intercepting them
+app.all('*', (req, res) => {
   return handle(req, res)
 })
 
