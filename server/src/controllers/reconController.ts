@@ -21,8 +21,23 @@ export const dnsEnumeration = async (req: Request, res: Response) => {
     try {
         const domain = req.body.domain || req.query.domain
         
-        if (!domain || !/^[a-zA-Z0-9][a-zA-Z0-9-_.]{0,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}$/.test(domain)) {
-            return res.status(400).json({ error: 'Invalid domain name' })
+        // Enhanced domain validation - stricter regex and length check
+        if (!domain || 
+            typeof domain !== 'string' ||
+            domain.length > 253 ||
+            !/^(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/.test(domain)) {
+            return res.status(400).json({ error: 'Invalid domain name format' })
+        }
+
+        // Prevent localhost and private IP lookups
+        const lowerDomain = domain.toLowerCase()
+        if (lowerDomain.includes('localhost') || 
+            lowerDomain.includes('127.0.0') ||
+            lowerDomain.includes('169.254') ||
+            lowerDomain.includes('10.') ||
+            lowerDomain.includes('192.168') ||
+            lowerDomain.includes('172.16')) {
+            return res.status(403).json({ error: 'Testing internal/private addresses is not allowed' })
         }
 
         const results: any = {
@@ -227,10 +242,23 @@ export const httpHeaderAnalysis = async (req: Request, res: Response) => {
             return res.status(400).json({ error: 'Invalid URL format' })
         }
 
+        // Prevent testing internal/private addresses
+        const hostname = targetUrl.hostname.toLowerCase()
+        if (hostname === 'localhost' ||
+            hostname.includes('127.0.0') ||
+            hostname.includes('169.254') ||
+            hostname.includes('10.') ||
+            hostname.includes('192.168') ||
+            hostname.includes('172.16') ||
+            hostname.includes('.local')) {
+            return res.status(403).json({ error: 'Testing internal/private addresses is not allowed' })
+        }
+
         const response = await axios.get(targetUrl.toString(), {
             timeout: 10000,
             maxRedirects: 5,
-            validateStatus: () => true // Accept any status code
+            validateStatus: () => true, // Accept any status code
+            maxContentLength: 5 * 1024 * 1024 // Limit response to 5MB
         })
 
         const analysis: any = {
@@ -297,7 +325,8 @@ export const techStackDetection = async (req: Request, res: Response) => {
         const response = await axios.get(targetUrl.toString(), {
             timeout: 10000,
             maxRedirects: 5,
-            validateStatus: () => true
+            validateStatus: () => true,
+            maxContentLength: 5 * 1024 * 1024 // Limit response to 5MB
         })
 
         const technologies: any = {
@@ -323,8 +352,9 @@ export const techStackDetection = async (req: Request, res: Response) => {
             })
         }
 
-        // Content analysis
-        const html = response.data.toString()
+        // Content analysis - limit to first 100KB for efficiency
+        const htmlData = response.data.toString()
+        const html = htmlData.substring(0, 100000)
         
         // React detection
         if (html.includes('__NEXT_DATA__') || html.includes('_next/')) {
