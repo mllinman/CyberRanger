@@ -92,10 +92,8 @@ app.use(compression())
 // Logging
 app.use(morgan('dev'))
 
-// Routes
-app.use('/api/scan', scannerRoutes)
-
-// Health check endpoint - Log access
+// Health check endpoint - MUST be defined first and respond immediately
+// This endpoint must be accessible even if Next.js fails to prepare
 app.get('/api/health', (req, res) => {
   console.log('💓 Health check ping received')
   res.status(200).json({
@@ -105,6 +103,19 @@ app.get('/api/health', (req, res) => {
   })
 })
 
+// Routes - API endpoints are registered before Next.js catch-all
+app.use('/api/scan', scannerRoutes)
+
+// Next.js handler for non-API routes - this must come AFTER API routes but BEFORE server.listen()
+// Only handle non-API routes with Next.js
+app.all('*', (req, res, next) => {
+  // Skip API routes - they're already handled above
+  if (req.path.startsWith('/api/')) {
+    return res.status(404).json({ error: 'API endpoint not found' })
+  }
+  return handle(req, res)
+})
+
 // Error handling middleware
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
   console.error('❌ Middleware Error:', err.stack)
@@ -112,11 +123,6 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
     error: 'Something went wrong!',
     message: process.env.NODE_ENV === 'production' ? 'Internal server error' : err.message
   })
-})
-
-// Next.js request handler
-app.all('*', (req, res) => {
-  return handle(req, res)
 })
 
 const startServer = async () => {
@@ -129,23 +135,29 @@ const startServer = async () => {
   console.log(`   - Selected PORT: ${PORT}`)
   console.log(`   - NODE_ENV: ${process.env.NODE_ENV}`)
 
+  // START SERVER IMMEDIATELY - don't wait for Next.js
+  // This ensures health checks can connect and get a response right away
+  const server = app.listen(PORT, '0.0.0.0', () => {
+    console.log(`🚀 CyberRanger Server listening exclusively on 0.0.0.0:${PORT}`)
+    console.log(`✅ Health check endpoint ready at /api/health`)
+    console.log(`⏳ Next.js preparation will continue in the background...`)
+  })
+
+  server.on('error', (err: any) => {
+    console.error('❌ Server failed to start:', err)
+    process.exit(1)
+  })
+
+  // Prepare Next.js AFTER server is listening
+  // This allows health checks to pass immediately while Next.js prepares
   try {
-    const server = app.listen(PORT, '0.0.0.0', () => {
-      console.log(`🚀 CyberRanger Server listening exclusively on 0.0.0.0:${PORT}`)
-    })
-
-    server.on('error', (err: any) => {
-      console.error('❌ Server failed to start:', err)
-      process.exit(1)
-    })
-
     console.log('⏳ Preparing Next.js application...')
     await nextApp.prepare()
-    console.log('✅ Next.js app prepared successfully')
+    console.log('✅ Next.js app prepared successfully - full site is now available')
   } catch (error) {
-    console.error('❌ Critical startup error:', error)
-    // Don't exit here, so the express server might still serve the health check
-    // if the error was just Next.js related
+    console.error('❌ Next.js preparation error:', error)
+    console.error('⚠️  Server will continue running with API-only functionality')
+    // Don't exit - server can still handle API requests and health checks
   }
 }
 
