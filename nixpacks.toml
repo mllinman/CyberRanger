@@ -1,6 +1,9 @@
 [phases.setup]
 nixPkgs = ["nodejs-18_x", "npm-9_x", "bash"]
 
+[variables]
+NIXPACKS_PATH = "/app"
+
 [phases.install]
 cmds = ["npm install"]
 
