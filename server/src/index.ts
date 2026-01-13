@@ -98,8 +98,9 @@ app.use(morgan('dev'))
 // Routes
 app.use('/api/scan', scannerRoutes)
 
-// Health check endpoint
+// Health check endpoint - Log access
 app.get('/api/health', (req, res) => {
+  console.log('💓 Health check ping received')
   res.status(200).json({
     status: 'OK',
     message: 'CyberRanger API is running',
@@ -109,7 +110,7 @@ app.get('/api/health', (req, res) => {
 
 // Error handling middleware
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
-  console.error(err.stack)
+  console.error('❌ Middleware Error:', err.stack)
   res.status(500).json({
     error: 'Something went wrong!',
     message: process.env.NODE_ENV === 'production' ? 'Internal server error' : err.message
@@ -122,18 +123,43 @@ app.all('*', (req, res) => {
 })
 
 const startServer = async () => {
-  const server = app.listen(PORT, '0.0.0.0', () => {
-    console.log(`🚀 CyberRanger Server listening on port ${PORT}`)
-  })
+  // Ensure PORT is an integer and fallback to 8000
+  const portEnv = process.env.PORT
+  const PORT = portEnv ? parseInt(portEnv, 10) : 8000
+
+  console.log(`🔧 Starting server configuration...`)
+  console.log(`   - PORT env: ${portEnv}`)
+  console.log(`   - Selected PORT: ${PORT}`)
+  console.log(`   - NODE_ENV: ${process.env.NODE_ENV}`)
 
   try {
+    const server = app.listen(PORT, '0.0.0.0', () => {
+      console.log(`🚀 CyberRanger Server listening exclusively on 0.0.0.0:${PORT}`)
+    })
+
+    server.on('error', (err: any) => {
+      console.error('❌ Server failed to start:', err)
+      process.exit(1)
+    })
+
     console.log('⏳ Preparing Next.js application...')
     await nextApp.prepare()
-    console.log('✅ Next.js app prepared')
+    console.log('✅ Next.js app prepared successfully')
   } catch (error) {
-    console.error('Failed to initialize Next.js:', error)
+    console.error('❌ Critical startup error:', error)
+    // Don't exit here, so the express server might still serve the health check
+    // if the error was just Next.js related
   }
 }
+
+// Global error handlers
+process.on('uncaughtException', (err) => {
+  console.error('💥 Uncaught Exception:', err)
+})
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('💥 Unhandled Rejection at:', promise, 'reason:', reason)
+})
 
 startServer()
 
