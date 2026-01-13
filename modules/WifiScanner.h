@@ -6,6 +6,7 @@
 #include <QString>
 #include <QVector>
 #include <QTimer>
+#include <QProcess>
 
 struct WiFiNetwork 
 {
@@ -27,11 +28,17 @@ public:
     void stopScan();
     QVector<WiFiNetwork> getNetworks() const;
     QStringList scanNetworks(); // Returns list of SSIDs
+    bool isCurrentlyScanning() const { return isScanning; }
+    
+    // Configuration constants
+    static constexpr int MAX_SIMULATED_NETWORKS = 10;
     
 signals:
     void networkDiscovered(const WiFiNetwork &network);
     void scanCompleted();
     void scanFailed(const QString& errorString);
+    void scanStarted();
+    void scanStopped();
 
 private slots:
     void scanStep();
@@ -39,7 +46,13 @@ private slots:
 private:
     QTimer *scanTimer;
     QVector<WiFiNetwork> networks;
+    bool isScanning;
+    
     void performScan();
+    void performLinuxScan();
+    void performWindowsScan();
+    void performSimulatedScan();
+    QString generateRandomMAC();
 };
 
 #endif // WIFISCANNER_H

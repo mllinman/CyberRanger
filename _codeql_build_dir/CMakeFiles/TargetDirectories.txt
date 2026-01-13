@@ -1,0 +1,5 @@
+/home/runner/work/CyberRanger/CyberRanger/_codeql_build_dir/CMakeFiles/CyberRangerWorking.dir
+/home/runner/work/CyberRanger/CyberRanger/_codeql_build_dir/CMakeFiles/edit_cache.dir
+/home/runner/work/CyberRanger/CyberRanger/_codeql_build_dir/CMakeFiles/rebuild_cache.dir
+/home/runner/work/CyberRanger/CyberRanger/_codeql_build_dir/CMakeFiles/CyberRangerWorking_autogen_timestamp_deps.dir
+/home/runner/work/CyberRanger/CyberRanger/_codeql_build_dir/CMakeFiles/CyberRangerWorking_autogen.dir

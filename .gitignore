@@ -89,4 +89,4 @@ CyberRanger_*
 *.run
 
 # Temporary files
-/tmp/
+/tmp/_codeql_*
