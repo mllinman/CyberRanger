@@ -53,22 +53,77 @@ void NetworkMapper::performScan() {
 }
 
 void NetworkMapper::performLinuxScan() {
-    // Try using arp-scan or ip neighbor for network discovery
+    // Try using ip neighbor or arp for network discovery
     QProcess arpProcess;
     
-    // First try ip neighbor (more commonly available)
+    // Verify ip command is available before using it
+    QProcess checkIp;
+    checkIp.start("which", QStringList() << "ip");
+    checkIp.waitForFinished(1000);
+    
+    if (checkIp.exitCode() != 0) {
+        Logger::warning("ip command not found, trying arp");
+        
+        // Try arp command as fallback
+        QProcess checkArp;
+        checkArp.start("which", QStringList() << "arp");
+        checkArp.waitForFinished(1000);
+        
+        if (checkArp.exitCode() != 0) {
+            Logger::warning("Neither ip nor arp command found, falling back to simulation");
+            performSimulatedScan();
+            return;
+        }
+        
+        // Use arp with fixed arguments
+        QProcess process;
+        process.start("arp", QStringList() << "-a");
+        
+        if (!process.waitForFinished(5000) || process.exitCode() != 0) {
+            Logger::warning("arp command failed, falling back to simulation");
+            performSimulatedScan();
+            return;
+        }
+        
+        parseArpOutput(process.readAllStandardOutput());
+        return;
+    }
+    
+    // First try ip neighbor (more commonly available) with fixed arguments
     arpProcess.start("ip", QStringList() << "neighbor" << "show");
     
     if (!arpProcess.waitForFinished(5000)) {
-        Logger::warning("ip neighbor command timed out, falling back to simulation");
-        performSimulatedScan();
+        Logger::warning("ip neighbor command timed out, trying arp");
+        
+        // Try arp command as fallback
+        QProcess process;
+        process.start("arp", QStringList() << "-a");
+        
+        if (!process.waitForFinished(5000) || process.exitCode() != 0) {
+            Logger::warning("arp command also failed, falling back to simulation");
+            performSimulatedScan();
+            return;
+        }
+        
+        parseArpOutput(process.readAllStandardOutput());
         return;
     }
     
     if (arpProcess.exitCode() != 0) {
         Logger::warning("ip neighbor command failed, trying arp");
         
-        // Try arp command as fallback
+        // Try arp command as fallback with verification
+        QProcess checkArp;
+        checkArp.start("which", QStringList() << "arp");
+        checkArp.waitForFinished(1000);
+        
+        if (checkArp.exitCode() != 0) {
+            Logger::warning("arp command not found, falling back to simulation");
+            performSimulatedScan();
+            return;
+        }
+        
+        // Use arp command with fixed arguments
         QProcess process;
         process.start("arp", QStringList() << "-a");
         
@@ -123,6 +178,18 @@ void NetworkMapper::performLinuxScan() {
 }
 
 void NetworkMapper::performWindowsScan() {
+    // Verify arp command is available on Windows
+    QProcess checkArp;
+    checkArp.start("where", QStringList() << "arp");
+    checkArp.waitForFinished(1000);
+    
+    if (checkArp.exitCode() != 0) {
+        Logger::warning("arp command not found on Windows, falling back to simulation");
+        performSimulatedScan();
+        return;
+    }
+    
+    // Use arp command with fixed arguments
     QProcess process;
     process.start("arp", QStringList() << "-a");
     

@@ -73,12 +73,25 @@ void WiFiScanner::performScan()
 
 void WiFiScanner::performLinuxScan()
 {
+    // Verify nmcli is available before attempting to use it
+    QProcess checkProcess;
+    checkProcess.start("which", QStringList() << "nmcli");
+    checkProcess.waitForFinished(1000);
+    
+    if (checkProcess.exitCode() != 0) {
+        Logger::warning("nmcli not found, falling back to simulation");
+        performSimulatedScan();
+        return;
+    }
+    
     QProcess process;
+    // Use fixed command arguments - no user input to prevent command injection
     process.start("nmcli", QStringList() << "-t" << "-f" 
                   << "SSID,BSSID,MODE,CHAN,FREQ,RATE,SIGNAL,SECURITY" 
                   << "dev" << "wifi" << "list");
     
-    if (!process.waitForFinished(5000)) {
+    // Increased timeout to 10 seconds for systems with many networks
+    if (!process.waitForFinished(10000)) {
         Logger::warning("nmcli command timed out, falling back to simulation");
         performSimulatedScan();
         return;
@@ -137,10 +150,23 @@ void WiFiScanner::performLinuxScan()
 
 void WiFiScanner::performWindowsScan()
 {
+    // Verify netsh is available before attempting to use it
+    QProcess checkProcess;
+    checkProcess.start("where", QStringList() << "netsh");
+    checkProcess.waitForFinished(1000);
+    
+    if (checkProcess.exitCode() != 0) {
+        Logger::warning("netsh not found, falling back to simulation");
+        performSimulatedScan();
+        return;
+    }
+    
     QProcess process;
+    // Use fixed command arguments - no user input to prevent command injection
     process.start("netsh", QStringList() << "wlan" << "show" << "networks" << "mode=bssid");
     
-    if (!process.waitForFinished(5000)) {
+    // Increased timeout to 10 seconds for comprehensive scanning
+    if (!process.waitForFinished(10000)) {
         Logger::warning("netsh command timed out, falling back to simulation");
         performSimulatedScan();
         return;
@@ -243,8 +269,11 @@ void WiFiScanner::performSimulatedScan()
     // Simulated WiFi network discovery for testing/demo
     static int count = 0;
     
-    // Limit to 10 simulated networks
-    if (networks.size() >= 10) {
+    // Maximum simulated networks constant for easy configuration
+    const int MAX_SIMULATED_NETWORKS = 10;
+    
+    // Limit to configured maximum
+    if (networks.size() >= MAX_SIMULATED_NETWORKS) {
         Logger::debug("Maximum simulated networks reached");
         return;
     }

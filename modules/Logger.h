@@ -30,6 +30,7 @@ private:
     static bool logToConsole;
     static bool logToFile;
     static QString logFilename;
+    // Thread-safe logging: static mutex is initialized before main() and is safe for concurrent access
     static QMutex logMutex;
     static QString logLevelToString(LogLevel level);
     static void writeLog(const QString& message, LogLevel level);

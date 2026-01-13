@@ -69,7 +69,18 @@ void BluetoothScanner::performLinuxScan() {
         return;
     }
     
-    // Use hcitool for device scanning
+    // Verify hcitool is available before attempting to use it
+    QProcess checkTool;
+    checkTool.start("which", QStringList() << "hcitool");
+    checkTool.waitForFinished(1000);
+    
+    if (checkTool.exitCode() != 0) {
+        Logger::warning("hcitool not found, falling back to simulation");
+        performSimulatedScan();
+        return;
+    }
+    
+    // Use hcitool for device scanning - fixed arguments, no user input
     process.start("hcitool", QStringList() << "scan");
     
     if (!process.waitForFinished(8000)) {
