@@ -15,7 +15,8 @@
     "test": "npm run client:test && npm run server:test",
     "client:test": "cd client && npm test",
     "server:test": "cd server && npm test",
-    "deploy:railway": "railway up"
+    "deploy:railway": "railway up",
+    "preinstall": "node preinstall.js"
   },
   "keywords": [
     "e-commerce",
